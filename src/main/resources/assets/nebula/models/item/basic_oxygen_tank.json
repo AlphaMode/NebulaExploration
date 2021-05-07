@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "nebula:item/basic_oxygen_tank"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "ammount": 1
+      },
+      "model": "nebula:item/basic_oxygen_tank"
+    }
+  ]
+}
