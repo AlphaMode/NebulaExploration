@@ -2,14 +2,15 @@ package alphamode.core.nebula.items;
 
 import alphamode.core.nebula.NebulaMod;
 import alphamode.core.nebula.blocks.NebulaBlocks;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.util.registry.Registry;
+
+import net.minecraft.core.Registry;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 
 import static alphamode.core.nebula.NebulaMod.id;
 
 public class NebulaItems {
-    private static final Item.Settings generalItem = new Item.Settings().maxCount(1).group(NebulaMod.SPACE_TAB);
+    private static final Item.Properties generalItem = new Item.Properties().stacksTo(1).tab(NebulaMod.SPACE_TAB);
 
     public static final OxygenTankItem BASIC_OXYGEN_TANK;
     public static final Item MUSTARD_BOMB;
@@ -25,6 +26,6 @@ public class NebulaItems {
         BASIC_OXYGEN_TANK = Registry.register(Registry.ITEM, id("basic_oxygen_tank"), new OxygenTankItem(generalItem,100));
         MUSTARD_BOMB = Registry.register(Registry.ITEM,id("mustard_bomb"),new MustardGasBomb(generalItem));
 
-        Condenser = Registry.register(Registry.ITEM, id("condenser"), new BlockItem(NebulaBlocks.Condenser_BLOCK, new Item.Settings().group(NebulaMod.SPACE_MACHINES)));
+        Condenser = Registry.register(Registry.ITEM, id("condenser"), new BlockItem(NebulaBlocks.Condenser_BLOCK, new Item.Properties().tab(NebulaMod.SPACE_MACHINES)));
     }
 }

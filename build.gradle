@@ -3,6 +3,9 @@ plugins {
     id 'maven-publish'
 }
 
+loom {
+    accessWidener = file("src/main/resources/nebula.aw")
+}
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -15,7 +18,8 @@ group = project.maven_group
 dependencies {
     //to change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings minecraft.officialMojangMappings()
+    mappings "net.fabricmc:yarn:1.16.5+build.8:v2"
+
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
@@ -28,7 +32,6 @@ dependencies {
 
 processResources {
     inputs.property "version", project.version
-
     from(sourceSets.main.resources.srcDirs) {
         include "fabric.mod.json"
         expand "version": project.version

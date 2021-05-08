@@ -22,6 +22,7 @@
   "mixins": [
     "NebulaMod.mixins.json"
   ],
+  "accessWidener": "nebula.aw",
   "depends": {
     "fabricloader": ">=0.11.3",
     "fabric": "*",

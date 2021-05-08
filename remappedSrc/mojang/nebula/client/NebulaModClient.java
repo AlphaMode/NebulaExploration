@@ -11,6 +11,8 @@ import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredica
 
 import static alphamode.core.nebula.NebulaMod.id;
 
+import net.minecraft.world.item.Items;
+
 @Environment(EnvType.CLIENT)
 public class NebulaModClient implements ClientModInitializer {
     private int getStage(int ammount) {

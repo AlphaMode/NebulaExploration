@@ -1,55 +1,54 @@
 package alphamode.core.nebula.blocks.entity;
 
 import alphamode.core.nebula.blocks.NebulaBlocks;
-import alphamode.core.nebula.screen.CondenserContainerMenu;
-
+import alphamode.core.nebula.screen.CondenserScreenHandler;
 import java.util.Iterator;
 
-import net.minecraft.core.NonNullList;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.LockableContainerBlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.*;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Tickable;
+import net.minecraft.util.collection.DefaultedList;
 
-public class CondenserBlockEntity extends BaseContainerBlockEntity implements TickableBlockEntity {
-    protected NonNullList<ItemStack> items;
+public class CondenserBlockEntity extends LockableContainerBlockEntity implements Tickable {
+    private final DefaultedList<ItemStack> items = DefaultedList.ofSize(1,ItemStack.EMPTY);
     public CondenserBlockEntity() {
         super(NebulaBlocks.Condenser_BLOCK_ENTITY);
-        items = NonNullList.create();
     }
 
     @Override
-    public void load(BlockState blockState, CompoundTag compoundTag) {
-        ContainerHelper.loadAllItems(compoundTag, items);
-        super.load(blockState, compoundTag);
+    public void fromTag(BlockState blockState, CompoundTag compoundTag) {
+        super.fromTag(blockState, compoundTag);
+        Inventories.fromTag(compoundTag, this.items);
     }
 
     @Override
-    public CompoundTag save(CompoundTag compoundTag) {
-        ContainerHelper.saveAllItems(compoundTag, items);
-        return super.save(compoundTag);
+    public CompoundTag toTag(CompoundTag compoundTag) {
+        super.toTag(compoundTag);
+        Inventories.toTag(compoundTag, this.items);
+        return compoundTag;
     }
 
     @Override
-    protected Component getDefaultName() {
-        return new TranslatableComponent("gui.condenser.name");
+    protected Text getContainerName() {
+        return new TranslatableText("gui.condenser.name");
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int syncID, Inventory inventory, Player player) {
-        return new CondenserContainerMenu(syncID,inventory, player.inventory);
+    public ScreenHandler createMenu(int syncID, PlayerInventory inventory, PlayerEntity player) {
+        return new CondenserScreenHandler(syncID,inventory, this);
     }
 
     @Override
-    protected AbstractContainerMenu createMenu(int syncID, Inventory inventory) {
-        return new CondenserContainerMenu(syncID,inventory,this);
+    protected ScreenHandler createScreenHandler(int syncID, PlayerInventory inventory) {
+        return new CondenserScreenHandler(syncID,inventory,this);
     }
 
 
@@ -59,7 +58,7 @@ public class CondenserBlockEntity extends BaseContainerBlockEntity implements Ti
     }
 
     @Override
-    public int getContainerSize() {
+    public int size() {
         return items.size();
     }
 
@@ -80,32 +79,36 @@ public class CondenserBlockEntity extends BaseContainerBlockEntity implements Ti
     }
 
     @Override
-    public ItemStack getItem(int i) {
+    public ItemStack getStack(int i) {
         return items.get(i);
     }
 
     @Override
-    public ItemStack removeItem(int i, int j) {
-        return ContainerHelper.removeItem(items, i,j);
+    public ItemStack removeStack(int slot, int count) {
+        ItemStack result = Inventories.splitStack(items, slot, count);
+        if (!result.isEmpty()) {
+            markDirty();
+        }
+        return result;
     }
 
     @Override
-    public ItemStack removeItemNoUpdate(int i) {
-        return ContainerHelper.takeItem(items,i);
+    public ItemStack removeStack(int i) {
+        return Inventories.removeStack(items,i);
     }
 
     @Override
-    public void setItem(int i, ItemStack itemStack) {
+    public void setStack(int i, ItemStack itemStack) {
         items.set(i, itemStack);
     }
 
     @Override
-    public boolean stillValid(Player player) {
-        return player.inventory.stillValid(player);
+    public boolean canPlayerUse(PlayerEntity player) {
+        return player.inventory.canPlayerUse(player);
     }
 
     @Override
-    public void clearContent() {
+    public void clear() {
         items.clear();
     }
 }

@@ -3,12 +3,10 @@ package alphamode.core.nebula.worldgen.Features;
 import alphamode.core.nebula.worldgen.Features.config.LatexConfig;
 import com.mojang.serialization.Codec;
 import java.util.Random;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.StructureWorldAccess;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.feature.Feature;
 
 public class LatexTreeFeature extends Feature<LatexConfig> {
 
@@ -17,7 +15,8 @@ public class LatexTreeFeature extends Feature<LatexConfig> {
     }
 
     @Override
-    public boolean place(WorldGenLevel worldGenLevel, ChunkGenerator chunkGenerator, Random random, BlockPos blockPos, LatexConfig featureConfiguration) {
+    public boolean generate(StructureWorldAccess world, ChunkGenerator chunkGenerator, Random random, BlockPos pos, LatexConfig config) {
         return false;
     }
+
 }
