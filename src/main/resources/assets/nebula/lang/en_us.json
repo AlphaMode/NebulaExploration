@@ -1,8 +1,11 @@
 {
   "item.nebula.basic_oxygen_tank": "Oxygen Tank",
   "item.nebula.mustard_bomb": "Mustard Bomb",
+  "item.nebula.fan": "Fan",
   "block.nebula.condenser": "Condenser",
+  "block.nebula.aluminum_ore": "Aluminum Ore",
   "itemGroup.nebula.space_misc": "Space Items",
   "itemGroup.nebula.space_machines": "Space Machines",
-  "gui.condenser.name": "Gas Condenser"
+  "gui.condenser.name": "Gas Condenser",
+  "gas.nebula.oxygen": "Oxygen"
 }

@@ -16,6 +16,7 @@ public class LatexTreeFeature extends Feature<LatexConfig> {
 
     @Override
     public boolean generate(StructureWorldAccess world, ChunkGenerator chunkGenerator, Random random, BlockPos pos, LatexConfig config) {
+
         return false;
     }
 

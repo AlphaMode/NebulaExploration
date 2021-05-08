@@ -20,7 +20,7 @@ import net.minecraft.util.collection.DefaultedList;
 public class CondenserBlockEntity extends LockableContainerBlockEntity implements Tickable {
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(1,ItemStack.EMPTY);
     public CondenserBlockEntity() {
-        super(NebulaBlocks.Condenser_BLOCK_ENTITY);
+        super(NebulaBlocks.CONDENSER_BLOCK_ENTITY);
     }
 
     @Override

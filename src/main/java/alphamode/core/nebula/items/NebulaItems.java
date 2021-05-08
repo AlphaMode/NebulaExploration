@@ -13,9 +13,11 @@ public class NebulaItems {
 
     public static final OxygenTankItem BASIC_OXYGEN_TANK;
     public static final Item MUSTARD_BOMB;
+    public static final Item FAN;
 
     //BLOCK ITEMS
-    public static final BlockItem Condenser;
+    public static final BlockItem CONDENSER;
+    public static final BlockItem ALUMINUM_ORE;
 
     //Load the class
     public static void init() {
@@ -23,8 +25,10 @@ public class NebulaItems {
     }
     static {
         BASIC_OXYGEN_TANK = Registry.register(Registry.ITEM, id("basic_oxygen_tank"), new OxygenTankItem(generalItem,100));
-        MUSTARD_BOMB = Registry.register(Registry.ITEM,id("mustard_bomb"),new MustardGasBomb(generalItem));
+        FAN = Registry.register(Registry.ITEM,id("fan"), new Item(generalItem.maxCount(64)));
+        MUSTARD_BOMB = Registry.register(Registry.ITEM,id("mustard_bomb"),new MustardGasBomb(generalItem.maxCount(16)));
 
-        Condenser = Registry.register(Registry.ITEM, id("condenser"), new BlockItem(NebulaBlocks.Condenser_BLOCK, new Item.Settings().group(NebulaMod.SPACE_MACHINES)));
+        CONDENSER = Registry.register(Registry.ITEM, id("condenser"), new BlockItem(NebulaBlocks.CONDENSER_BLOCK, new Item.Settings().group(NebulaMod.SPACE_MACHINES)));
+        ALUMINUM_ORE = Registry.register(Registry.ITEM, id("aluminum_ore"), new BlockItem(NebulaBlocks.ALUMINUM_ORE, new Item.Settings().group(NebulaMod.SPACE_MACHINES)));
     }
 }
