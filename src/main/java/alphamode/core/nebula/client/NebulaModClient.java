@@ -1,6 +1,6 @@
 package alphamode.core.nebula.client;
 
-import alphamode.core.nebula.client.screen.CondenserContainerScreen;
+import alphamode.core.nebula.client.screen.CondenserHandledScreen;
 import alphamode.core.nebula.items.NebulaItems;
 import alphamode.core.nebula.screen.NebulaScreens;
 import net.fabricmc.api.ClientModInitializer;
@@ -18,7 +18,7 @@ public class NebulaModClient implements ClientModInitializer {
     }
     @Override
     public void onInitializeClient() {
-        ScreenRegistry.register(NebulaScreens.CONDENSER_MENU, CondenserContainerScreen::new);
+        ScreenRegistry.register(NebulaScreens.CONDENSER_MENU, CondenserHandledScreen::new);
         FabricModelPredicateProviderRegistry.register(NebulaItems.BASIC_OXYGEN_TANK, id("ammount"),(itemStack, clientLevel, livingEntity) -> {
             if(livingEntity == null) {
                 return 0;

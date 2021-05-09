@@ -26,7 +26,7 @@ public class NebulaBlocks {
     }
 
     static {
-        CONDENSER_BLOCK = Registry.register(Registry.BLOCK,id("condenser"),new CondenserBlock(generalProperties));
+        CONDENSER_BLOCK = Registry.register(Registry.BLOCK,id("condenser"),new CondenserBlock(generalProperties.nonOpaque()));
         CONDENSER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE,id("condenser"),BlockEntityType.Builder.create(CondenserBlockEntity::new, CONDENSER_BLOCK).build(null));
         ALUMINUM_ORE = Registry.register(Registry.BLOCK,id("aluminum_ore"), new OreBlock(generalProperties.strength(4.5f, 5.f).sounds(BlockSoundGroup.STONE).breakByTool(FabricToolTags.PICKAXES, 2)));
     }
