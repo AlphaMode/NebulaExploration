@@ -4,6 +4,7 @@
   "item.nebula.fan": "Fan",
   "block.nebula.condenser": "Condenser",
   "block.nebula.aluminum_ore": "Aluminum Ore",
+  "block.nebula.basic_gas_cable": "Basic Gas Cable",
   "itemGroup.nebula.space_misc": "Space Items",
   "itemGroup.nebula.space_machines": "Space Machines",
   "gui.condenser.name": "Gas Condenser",

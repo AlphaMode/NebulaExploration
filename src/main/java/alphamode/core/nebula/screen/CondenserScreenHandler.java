@@ -23,12 +23,6 @@ public class CondenserScreenHandler extends ScreenHandler {
         int m;
         int l;
         this.addSlot(new Slot(inventory,0 ,66,52));
-        //Our inventory
-        //for (m = 0; m < 3; ++m) {
-         //   for (l = 0; l < 3; ++l) {
-         //       this.addSlot(new Slot(inventory, l + m * 3, 62 + l * 18, 17 + m * 18));
-         //   }
-       // }
         //The player inventory
         for (m = 0; m < 3; ++m) {
             for (l = 0; l < 9; ++l) {

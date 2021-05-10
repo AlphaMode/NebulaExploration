@@ -17,6 +17,7 @@ public class NebulaItems {
 
     //BLOCK ITEMS
     public static final BlockItem CONDENSER;
+    public static final BlockItem BASIC_GAS_CABLE;
     public static final BlockItem ALUMINUM_ORE;
 
     //Load the class
@@ -29,6 +30,7 @@ public class NebulaItems {
         MUSTARD_BOMB = Registry.register(Registry.ITEM,id("mustard_bomb"),new MustardGasBomb(generalItem.maxCount(16)));
 
         CONDENSER = Registry.register(Registry.ITEM, id("condenser"), new BlockItem(NebulaBlocks.CONDENSER_BLOCK, new Item.Settings().group(NebulaMod.SPACE_MACHINES)));
+        BASIC_GAS_CABLE = Registry.register(Registry.ITEM, id("basic_gas_cable"), new BlockItem(NebulaBlocks.BASIC_GAS_CABLE, new Item.Settings().group(NebulaMod.SPACE_MACHINES)));
         ALUMINUM_ORE = Registry.register(Registry.ITEM, id("aluminum_ore"), new BlockItem(NebulaBlocks.ALUMINUM_ORE, new Item.Settings().group(NebulaMod.SPACE_MACHINES)));
     }
 }

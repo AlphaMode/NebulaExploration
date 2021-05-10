@@ -26,7 +26,6 @@ public class NebulaDimensions {
         SPACE = Registry.register(NebulaRegistry.ATMOSPHERE, id("space"), new Atmosphere(id("space"), Map.of(NebulaGases.EMPTY,0)));
         OUTTER_SPACE = Registry.register(NebulaRegistry.ATMOSPHERE, id("outter_space"), new Atmosphere(id("outter_space"), Map.of(NebulaGases.NITROGEN,52)));
         EARTH_ATMOSPHERE = Registry.register(NebulaRegistry.ATMOSPHERE, id("earth"),new Atmosphere(DimensionType.OVERWORLD_ID, Map.of(NebulaGases.OXYGEN,27,NebulaGases.NITROGEN,11)));
-
     }
 
 }

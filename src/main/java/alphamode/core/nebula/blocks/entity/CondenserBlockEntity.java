@@ -17,7 +17,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
 
-public class CondenserBlockEntity extends LockableContainerBlockEntity implements Tickable {
+public class CondenserBlockEntity extends LockableContainerBlockEntity {
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(1,ItemStack.EMPTY);
     public CondenserBlockEntity() {
         super(NebulaBlocks.CONDENSER_BLOCK_ENTITY);
@@ -49,12 +49,6 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
     @Override
     protected ScreenHandler createScreenHandler(int syncID, PlayerInventory inventory) {
         return new CondenserScreenHandler(syncID,inventory,this);
-    }
-
-
-    @Override
-    public void tick() {
-
     }
 
     @Override
