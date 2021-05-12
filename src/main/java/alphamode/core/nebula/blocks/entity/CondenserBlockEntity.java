@@ -1,8 +1,10 @@
 package alphamode.core.nebula.blocks.entity;
 
 import alphamode.core.nebula.blocks.NebulaBlocks;
+import alphamode.core.nebula.gases.GasState;
 import alphamode.core.nebula.screen.CondenserScreenHandler;
 import java.util.Iterator;
+import java.util.List;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
@@ -19,6 +21,7 @@ import net.minecraft.util.collection.DefaultedList;
 
 public class CondenserBlockEntity extends LockableContainerBlockEntity {
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(1,ItemStack.EMPTY);
+    private List<GasState> gases;
     public CondenserBlockEntity() {
         super(NebulaBlocks.CONDENSER_BLOCK_ENTITY);
     }

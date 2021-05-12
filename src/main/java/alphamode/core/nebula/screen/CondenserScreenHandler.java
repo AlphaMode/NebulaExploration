@@ -1,21 +1,25 @@
 package alphamode.core.nebula.screen;
 
+import alphamode.core.nebula.blocks.entity.CondenserBlockEntity;
+
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 
 public class CondenserScreenHandler extends ScreenHandler {
-    private Inventory inventory;
+    private CondenserBlockEntity inventory;
 
-    public CondenserScreenHandler(int syncId, PlayerInventory inventory) {
-        this(syncId,inventory, new SimpleInventory(1));
+    public CondenserBlockEntity getInventory() {
+        return inventory;
     }
 
-    public CondenserScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
+    public CondenserScreenHandler(int syncId, PlayerInventory playerInventory, CondenserBlockEntity inventory) {
         super(NebulaScreens.CONDENSER_MENU,syncId);
         checkSize(inventory, 1);
         this.inventory = inventory;
@@ -33,6 +37,10 @@ public class CondenserScreenHandler extends ScreenHandler {
         for (m = 0; m < 9; ++m) {
             this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
         }
+    }
+
+    public CondenserScreenHandler(int i, PlayerInventory playerInventory) {
+        super(NebulaScreens.CONDENSER_MENU,i);
     }
 
     @Override
@@ -62,7 +70,6 @@ public class CondenserScreenHandler extends ScreenHandler {
 
     @Override
     public boolean canUse(PlayerEntity player) {
-
         return this.inventory.canPlayerUse(player);
     }
 }

@@ -2,17 +2,14 @@ package alphamode.core.nebula.client.screen;
 
 import alphamode.core.nebula.NebulaRegistry;
 import alphamode.core.nebula.gases.Gas;
-import alphamode.core.nebula.gases.NebulaGases;
+import alphamode.core.nebula.screen.CondenserScreenHandler;
 import alphamode.core.nebula.util.Util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import static alphamode.core.nebula.NebulaMod.id;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,27 +35,35 @@ import net.minecraft.util.math.Matrix4f;
 public class CondenserHandledScreen extends HandledScreen<ScreenHandler> {
     private static final Identifier TEXTURE = id("textures/gui/condenser.png");
 
-    private void renderGasTooltip(MatrixStack matrixStack, Gas gas, int mouseX, int mouseY) {
+    private void renderAtmosphericGasTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
         int offset = 67;
         for(Map.Entry<Gas, Integer> cursed:Util.getAtmosphereGas(client.player).entrySet()) {
 
             int checkX = mouseX - this.x;
             int checkY = mouseY - this.y;
 
-            if(checkX >= 11 && checkY >= offset-cursed.getValue() && checkX < 11 + 20 && checkY < offset-cursed.getValue() + cursed.getValue()) {
+            if(checkX >= 11 && checkY >= offset-11 && checkX < 11 + 20 && checkY < offset-cursed.getValue() + 11) {
                 List<Text> tooltip = new ArrayList<>();
+
+                //cursed.getValue().addFullTooltip(tooltip);
                 tooltip.add(cursed.getKey().getName());
+                cursed.getValue();
                 //tooltip.add(new LiteralText(" "));
-                String name = NebulaRegistry.GAS.getId(gas).getNamespace();
+                String name = NebulaRegistry.GAS.getId(cursed.getKey()).getNamespace();
                 name = name.substring(0, 1).toUpperCase() + name.substring(1);
-                tooltip.add(new TranslatableText("gui.nebula.concentration").append(": "+Util.getAtmosphereGas(client.player).get(cursed.getKey())+" / 52").formatted(Formatting.GRAY));
+                tooltip.add(new TranslatableText("gui.nebula.concentration").append(": "+Util.getAtmosphereGas(client.player).get(cursed.getKey())+" mB/tick").formatted(Formatting.GRAY));
                 tooltip.add(new LiteralText(name).formatted(Formatting.BLUE));
                 renderTooltip(matrixStack, tooltip, mouseX, mouseY);
             }
-            offset -= cursed.getValue();
+            offset -= 11;
         }
 
     }
+
+    private void renderTankTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
+
+    }
+
     public static void setColorRGBA(int color) {
         float a = alpha(color) / 255.0F;
         float r = red(color) / 255.0F;
@@ -84,15 +89,15 @@ public class CondenserHandledScreen extends HandledScreen<ScreenHandler> {
         return (c) & 0xFF;
     }
 
-    public void renderGases(MatrixStack matrixStack,int mouseX,int mouseY) {
+    public void renderGases(MatrixStack matrixStack) {
         FluidRenderHandler fluidRenderHandler = FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER.getStill());
         Sprite[] sprites = fluidRenderHandler.getFluidSprites(client.world, client.world == null ? null : BlockPos.ORIGIN, Fluids.WATER.getStill().getDefaultState());
 
         int offset = 67;
         for(Map.Entry<Gas, Integer> cursed:Util.getAtmosphereGas(client.player).entrySet()) {
             setColorRGBA(cursed.getKey().getColor());
-            renderTiledTextureAtlas(matrixStack, this, sprites[0], 11, offset-cursed.getValue(), 20, cursed.getValue(), 100, false);
-            offset -= cursed.getValue();
+            renderTiledTextureAtlas(matrixStack, this, sprites[0], 11, offset-11, 20, 11, 100, false);
+            offset -= 11;
         }
 
     }
@@ -105,7 +110,7 @@ public class CondenserHandledScreen extends HandledScreen<ScreenHandler> {
     protected void drawBackground(MatrixStack matrixStack, float delta, int x, int y) {
         int ax = (width - backgroundWidth) / 2;
         int ay = (height - backgroundHeight) / 2;
-        renderGases(matrixStack,x,y);
+        renderGases(matrixStack);
         RenderSystem.color4f(1f, 1f, 1f, 1f);
         client.getTextureManager().bindTexture(TEXTURE);
         RenderSystem.disableDepthTest();
@@ -174,8 +179,8 @@ public class CondenserHandledScreen extends HandledScreen<ScreenHandler> {
         //blit(matrixStack, ax, ay, 0, 0, imageWidth, imageHeight);
         renderBackground(matrixStack);
         super.render(matrixStack, x, y, delta);
-
-        renderGasTooltip(matrixStack, NebulaGases.OXYGEN, x, y);
+        renderTankTooltip(matrixStack, x, y);
+        renderAtmosphericGasTooltip(matrixStack, x, y);
         drawMouseoverTooltip(matrixStack, x, y);
     }
 

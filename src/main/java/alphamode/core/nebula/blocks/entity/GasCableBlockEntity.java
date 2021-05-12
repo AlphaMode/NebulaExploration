@@ -1,16 +1,18 @@
 package alphamode.core.nebula.blocks.entity;
 
+import alexiil.mc.lib.attributes.fluid.FluidExtractable;
+import alexiil.mc.lib.attributes.fluid.render.FluidVolumeRenderer;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alphamode.core.nebula.blocks.ICable;
 import alphamode.core.nebula.blocks.NebulaBlocks;
 import alphamode.core.nebula.gases.GasState;
-import net.fabricmc.fabric.api.lookup.v1.custom.ApiLookupMap;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.Tickable;
 
-public class GasCableBlockEntity extends BlockEntity implements ICable<GasState>, Tickable {
+public class GasCableBlockEntity extends BlockEntity implements ICable<GasState>, Tickable, FluidExtractable {
 
-    private GasState[] gasStates;
+    private FluidVolume[] gases;
 
     public GasCableBlockEntity() {
         super(NebulaBlocks.GAS_CABLE_BLOCK_ENTITY_BLOCK);
@@ -22,8 +24,8 @@ public class GasCableBlockEntity extends BlockEntity implements ICable<GasState>
     }
 
     @Override
-    public GasState[] getStates() {
-        return this.gasStates;
+    public FluidVolume[] getGases() {
+        return this.gases;
     }
 
     @Override

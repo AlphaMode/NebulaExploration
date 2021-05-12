@@ -13,9 +13,6 @@ import net.minecraft.util.registry.RegistryKey;
 
 public class NebulaRegistry {
 
-    public static final RegistryKey<Registry<Gas>> GAS_KEY = RegistryKey.ofRegistry(id("gas"));
-    public static final DefaultedRegistry<Gas> GAS = Registry.create(GAS_KEY, new DefaultedRegistry("empty",GAS_KEY, Lifecycle.stable()), () -> NebulaGases.EMPTY, Lifecycle.stable());
-
     public static final RegistryKey<Registry<Atmosphere>> ATMOSPHERE_KEY = RegistryKey.ofRegistry(id("atmosphere"));
     public static final DefaultedRegistry<Atmosphere> ATMOSPHERE = Registry.create(ATMOSPHERE_KEY, new DefaultedRegistry("empty",ATMOSPHERE_KEY, Lifecycle.stable()), () -> NebulaDimensions.EARTH_ATMOSPHERE, Lifecycle.stable());
 

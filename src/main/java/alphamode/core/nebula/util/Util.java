@@ -1,5 +1,7 @@
 package alphamode.core.nebula.util;
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alphamode.core.nebula.NebulaRegistry;
 import alphamode.core.nebula.dimensions.Atmosphere;
 import alphamode.core.nebula.dimensions.NebulaDimensions;
@@ -28,7 +30,7 @@ public class Util {
         return FabricItemGroupBuilder.build(id,tab);
     }
 
-    public static Map<Gas,Integer> getAtmosphereGas(PlayerEntity playerEntity) {
+    public static Map<Gas, Integer> getAtmosphereGas(PlayerEntity playerEntity) {
         for(Identifier id: NebulaRegistry.ATMOSPHERE.getIds()) {
             if(NebulaRegistry.ATMOSPHERE.get(id).getDimension().equals(playerEntity.world.getRegistryKey().getValue())) {
                 return NebulaRegistry.ATMOSPHERE.get(id).getAstmospherGases();

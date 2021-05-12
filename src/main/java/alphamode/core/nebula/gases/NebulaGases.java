@@ -17,8 +17,8 @@ public class NebulaGases {
     }
 
     static {
-        EMPTY = Registry.register(NebulaRegistry.GAS, id("empty"), new Gas());
-        OXYGEN = Registry.register(NebulaRegistry.GAS, id("oxygen"),new Gas());
-        NITROGEN = Registry.register(NebulaRegistry.GAS, id("nitrogen"), new Gas(new Color(0xA6A6EC).getRGB()));
+        EMPTY = Registry.register(Registry.FLUID, id("empty"), new Gas());
+        OXYGEN = Registry.register(Registry.FLUID, id("oxygen"),new Gas());
+        NITROGEN = Registry.register(Registry.FLUID, id("nitrogen"), new Gas(new Color(0xA6A6EC).getRGB()));
     }
 }

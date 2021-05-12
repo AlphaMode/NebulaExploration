@@ -1,6 +1,7 @@
 package alphamode.core.nebula.blocks;
 
 import alphamode.core.nebula.blocks.entity.CondenserBlockEntity;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
