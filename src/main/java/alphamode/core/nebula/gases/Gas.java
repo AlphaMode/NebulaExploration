@@ -15,6 +15,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldView;
@@ -93,7 +94,7 @@ public class Gas extends Fluid {
 
     public String getTranslationKey() {
         if (this.translationKey == null) {
-            this.translationKey = Util.createTranslationKey("gas", NebulaRegistry.GAS.getId(this));
+            this.translationKey = Util.createTranslationKey("gas", Registry.FLUID.getId(this));
         }
         return this.translationKey;
     }

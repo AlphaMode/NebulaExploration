@@ -1,10 +1,15 @@
 package alphamode.core.nebula.client.screen;
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alphamode.core.nebula.NebulaRegistry;
+import alphamode.core.nebula.components.NebulaComponents;
 import alphamode.core.nebula.gases.Gas;
 import alphamode.core.nebula.screen.CondenserScreenHandler;
 import alphamode.core.nebula.util.Util;
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import org.lwjgl.opengl.GL11;
@@ -22,7 +27,10 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -31,25 +39,31 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.registry.Registry;
 
 public class CondenserHandledScreen extends HandledScreen<ScreenHandler> {
     private static final Identifier TEXTURE = id("textures/gui/condenser.png");
+    private List<FluidVolume> tank;
 
     private void renderAtmosphericGasTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
         int offset = 67;
-        for(Map.Entry<Gas, Integer> cursed:Util.getAtmosphereGas(client.player).entrySet()) {
+        for(Map.Entry<Fluid, Integer> cursed:Util.getAtmosphereGas(client.player).entrySet()) {
 
             int checkX = mouseX - this.x;
             int checkY = mouseY - this.y;
+            List<Text> UwU = new ArrayList<>();
 
+            //UwU.add(new LiteralText(((CondenserScreenHandler)getScreenHandler()).getFluids().get(0).localizeInTank(FluidAmount.of(1, 1000))));
+            renderTooltip(matrixStack, UwU, mouseX, mouseY);
             if(checkX >= 11 && checkY >= offset-11 && checkX < 11 + 20 && checkY < offset-cursed.getValue() + 11) {
                 List<Text> tooltip = new ArrayList<>();
 
                 //cursed.getValue().addFullTooltip(tooltip);
-                tooltip.add(cursed.getKey().getName());
+                //tooltip.add(cursed.getKey().getName());
                 cursed.getValue();
                 //tooltip.add(new LiteralText(" "));
-                String name = NebulaRegistry.GAS.getId(cursed.getKey()).getNamespace();
+                //String name = NebulaRegistry.GAS.getId(cursed.getKey()).getNamespace();
+                String name = Registry.FLUID.getId(cursed.getKey()).getNamespace();
                 name = name.substring(0, 1).toUpperCase() + name.substring(1);
                 tooltip.add(new TranslatableText("gui.nebula.concentration").append(": "+Util.getAtmosphereGas(client.player).get(cursed.getKey())+" mB/tick").formatted(Formatting.GRAY));
                 tooltip.add(new LiteralText(name).formatted(Formatting.BLUE));
@@ -94,8 +108,8 @@ public class CondenserHandledScreen extends HandledScreen<ScreenHandler> {
         Sprite[] sprites = fluidRenderHandler.getFluidSprites(client.world, client.world == null ? null : BlockPos.ORIGIN, Fluids.WATER.getStill().getDefaultState());
 
         int offset = 67;
-        for(Map.Entry<Gas, Integer> cursed:Util.getAtmosphereGas(client.player).entrySet()) {
-            setColorRGBA(cursed.getKey().getColor());
+        for(Map.Entry<Fluid, Integer> cursed:Util.getAtmosphereGas(client.player).entrySet()) {
+            //setColorRGBA(cursed.getKey().getColor());
             renderTiledTextureAtlas(matrixStack, this, sprites[0], 11, offset-11, 20, 11, 100, false);
             offset -= 11;
         }
@@ -104,6 +118,8 @@ public class CondenserHandledScreen extends HandledScreen<ScreenHandler> {
 
     public CondenserHandledScreen(ScreenHandler abstractContainerMenu, PlayerInventory inventory, Text component) {
         super(abstractContainerMenu, inventory, component);
+        tank = new ArrayList<>();
+
     }
 
     @Override

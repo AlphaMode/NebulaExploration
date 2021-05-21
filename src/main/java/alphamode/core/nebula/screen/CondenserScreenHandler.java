@@ -1,22 +1,32 @@
 package alphamode.core.nebula.screen;
 
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import alexiil.mc.lib.attributes.fluid.volume.NormalFluidVolume;
 import alphamode.core.nebula.blocks.entity.CondenserBlockEntity;
+import alphamode.core.nebula.gases.NebulaGases;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import static alphamode.core.nebula.NebulaMod.id;
+import java.util.ArrayList;
+import java.util.List;
 
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 public class CondenserScreenHandler extends ScreenHandler {
     private CondenserBlockEntity inventory;
 
-    public CondenserBlockEntity getInventory() {
-        return inventory;
+    public List<FluidVolume> getGases() {
+        return inventory.getGases();
     }
 
     public CondenserScreenHandler(int syncId, PlayerInventory playerInventory, CondenserBlockEntity inventory) {
@@ -37,12 +47,25 @@ public class CondenserScreenHandler extends ScreenHandler {
         for (m = 0; m < 9; ++m) {
             this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
         }
+
+        PacketByteBuf buf = PacketByteBufs.create();
+        CompoundTag tag = new CompoundTag();
+        ListTag listTag = new ListTag();
+        listTag.add(NormalFluidVolume.create(NebulaGases.NITROGEN, 100).toTag());
+        tag.put("gases", listTag);
+        buf.writeCompoundTag(tag);
+        ServerPlayNetworking.send((ServerPlayerEntity) playerInventory.player, id("condenser_update"), buf);
+        //NebulaComponents.GAS_COMPONENT.get(this.inventory).setFluids(temp);
+        //LogManager.getLogger("c").info(NebulaComponents.GAS_COMPONENT.get(this.inventory).getFluids().get(0).localizeInTank(FluidAmount.of(1,1000)));
+        //NebulaComponents.GAS_COMPONENT.sync(this.inventory);
     }
 
     public CondenserScreenHandler(int i, PlayerInventory playerInventory) {
         super(NebulaScreens.CONDENSER_MENU,i);
+
     }
 
+    @Environment(EnvType.SERVER)
     @Override
     public ItemStack transferSlot(PlayerEntity player, int invSlot) {
         ItemStack newStack = ItemStack.EMPTY;

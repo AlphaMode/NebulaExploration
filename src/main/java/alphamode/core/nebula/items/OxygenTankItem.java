@@ -37,8 +37,8 @@ public class OxygenTankItem extends Item implements Tank {
 
     @Override
     public void appendTooltip(ItemStack itemStack, @Nullable World level, List<Text> list, TooltipContext tooltipFlag) {
-        list.add(((MutableText)NebulaGases.OXYGEN.getName()).append(": "+itemStack.getOrCreateTag().getInt("oxygen")+"/"+maxCapacity));
-        super.appendTooltip(itemStack, level, list, tooltipFlag);
+        //list.add(((MutableText)NebulaGases.OXYGEN).append(": "+itemStack.getOrCreateTag().getInt("oxygen")+"/"+maxCapacity));
+        //super.appendTooltip(itemStack, level, list, tooltipFlag);
     }
 
 }

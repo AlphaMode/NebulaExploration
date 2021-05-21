@@ -17,6 +17,9 @@
     ],
     "main": [
       "alphamode.core.nebula.NebulaMod"
+    ],
+    "cardinal-components": [
+      "alphamode.core.nebula.components.NebulaComponents"
     ]
   },
   "mixins": [
@@ -27,5 +30,10 @@
     "fabricloader": ">=0.11.3",
     "fabric": "*",
     "minecraft": "1.16.5"
+  },
+  "custom": {
+    "cardinal-components": [
+      "nebula:gas_component"
+    ]
   }
 }

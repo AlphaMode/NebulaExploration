@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -30,7 +31,7 @@ public class Util {
         return FabricItemGroupBuilder.build(id,tab);
     }
 
-    public static Map<Gas, Integer> getAtmosphereGas(PlayerEntity playerEntity) {
+    public static Map<Fluid, Integer> getAtmosphereGas(PlayerEntity playerEntity) {
         for(Identifier id: NebulaRegistry.ATMOSPHERE.getIds()) {
             if(NebulaRegistry.ATMOSPHERE.get(id).getDimension().equals(playerEntity.world.getRegistryKey().getValue())) {
                 return NebulaRegistry.ATMOSPHERE.get(id).getAstmospherGases();

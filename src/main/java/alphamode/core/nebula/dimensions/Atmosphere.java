@@ -4,11 +4,12 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alphamode.core.nebula.gases.Gas;
 import java.util.Map;
 
+import net.minecraft.fluid.Fluid;
 import net.minecraft.util.Identifier;
 
 public class Atmosphere {
 
-    private Map<Gas, Integer> astmosphereGases;
+    private Map<Fluid, Integer> astmosphereGases;
 
     private final Identifier dimension;
 
@@ -17,7 +18,7 @@ public class Atmosphere {
         astmosphereGases = gases;
     }
 
-        public Map<Gas, Integer> getAstmospherGases() {
+        public Map<Fluid, Integer> getAstmospherGases() {
         return astmosphereGases;
     }
 
