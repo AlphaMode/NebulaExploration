@@ -6,3 +6,5 @@ accessible field    net/minecraft/client/gui/screen/ingame/HandledScreen   x I
 accessible field    net/minecraft/client/gui/screen/ingame/HandledScreen   y I
 
 accessible method   net/minecraft/util/registry/Registry    create  (Lnet/minecraft/util/registry/RegistryKey;Lnet/minecraft/util/registry/MutableRegistry;Ljava/util/function/Supplier;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/util/registry/MutableRegistry;
+
+accessible method   net/minecraft/block/FluidBlock  <init>  (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V

@@ -2,6 +2,7 @@ package alphamode.core.nebula.blocks;
 
 import alphamode.core.nebula.blocks.entity.CondenserBlockEntity;
 import alphamode.core.nebula.blocks.entity.GasCableBlockEntity;
+import alphamode.core.nebula.gases.NebulaGases;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 

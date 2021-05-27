@@ -1,23 +1,18 @@
 package alphamode.core.nebula.client.screen;
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alphamode.core.nebula.NebulaRegistry;
-import alphamode.core.nebula.components.NebulaComponents;
+import alphamode.core.nebula.NebulaMod;
 import alphamode.core.nebula.gases.Gas;
-import alphamode.core.nebula.screen.CondenserScreenHandler;
 import alphamode.core.nebula.util.Util;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import org.lwjgl.opengl.GL11;
 import static alphamode.core.nebula.NebulaMod.id;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.BufferBuilder;
@@ -27,49 +22,48 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.registry.Registry;
 
 public class CondenserHandledScreen extends HandledScreen<ScreenHandler> {
     private static final Identifier TEXTURE = id("textures/gui/condenser.png");
     private List<FluidVolume> tank;
 
+    private boolean isHovering(int mouseX, int mouseY) {
+        int checkX = mouseX - this.x;
+        int checkY = mouseY - this.y;
+        return checkX >= this.x && checkY >= this.y && checkX < this.x + this.width && checkY < this.y + this.height;
+    }
+
     private void renderAtmosphericGasTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
         int offset = 67;
-        for(Map.Entry<Fluid, Integer> cursed:Util.getAtmosphereGas(client.player).entrySet()) {
-
+        for(Map.Entry<Gas, Integer> cursed:Util.getAtmosphereGas(client.player).entrySet()) {
             int checkX = mouseX - this.x;
             int checkY = mouseY - this.y;
+
             List<Text> UwU = new ArrayList<>();
 
             //UwU.add(new LiteralText(((CondenserScreenHandler)getScreenHandler()).getFluids().get(0).localizeInTank(FluidAmount.of(1, 1000))));
             renderTooltip(matrixStack, UwU, mouseX, mouseY);
-            if(checkX >= 11 && checkY >= offset-11 && checkX < 11 + 20 && checkY < offset-cursed.getValue() + 11) {
+            int temp = Util.clamp(cursed.getValue(), 0, 52);
+            //if(isHovering(11,offset-temp)) {
+            //NebulaMod.LOGGER.info(temp+""+cursed.getKey().getName());
+            if(checkX >= 11 && checkY >= offset-temp && checkX < 11 + 20 && checkY < offset-temp + temp) {
                 List<Text> tooltip = new ArrayList<>();
 
-                //cursed.getValue().addFullTooltip(tooltip);
-                //tooltip.add(cursed.getKey().getName());
-                cursed.getValue();
-                //tooltip.add(new LiteralText(" "));
-                //String name = NebulaRegistry.GAS.getId(cursed.getKey()).getNamespace();
-                String name = Registry.FLUID.getId(cursed.getKey()).getNamespace();
-                name = name.substring(0, 1).toUpperCase() + name.substring(1);
+                tooltip.add(cursed.getKey().getName());
+
                 tooltip.add(new TranslatableText("gui.nebula.concentration").append(": "+Util.getAtmosphereGas(client.player).get(cursed.getKey())+" mB/tick").formatted(Formatting.GRAY));
-                tooltip.add(new LiteralText(name).formatted(Formatting.BLUE));
+                Util.appendModIdToTooltips(tooltip, NebulaMod.MOD_ID);
                 renderTooltip(matrixStack, tooltip, mouseX, mouseY);
             }
-            offset -= 11;
+            offset -= cursed.getValue();
         }
 
     }
@@ -108,10 +102,11 @@ public class CondenserHandledScreen extends HandledScreen<ScreenHandler> {
         Sprite[] sprites = fluidRenderHandler.getFluidSprites(client.world, client.world == null ? null : BlockPos.ORIGIN, Fluids.WATER.getStill().getDefaultState());
 
         int offset = 67;
-        for(Map.Entry<Fluid, Integer> cursed:Util.getAtmosphereGas(client.player).entrySet()) {
-            //setColorRGBA(cursed.getKey().getColor());
-            renderTiledTextureAtlas(matrixStack, this, sprites[0], 11, offset-11, 20, 11, 100, false);
-            offset -= 11;
+        for(Map.Entry<Gas, Integer> cursed:Util.getAtmosphereGas(client.player).entrySet()) {
+            setColorRGBA(cursed.getKey().getColor());
+            //NebulaMod.LOGGER.info(Util.clamp(cursed.getValue(), 0, 52));
+            renderTiledTextureAtlas(matrixStack, this, sprites[0], 11, offset-Util.clamp(cursed.getValue(), 0, 52), 20, Util.clamp(cursed.getValue(), 0, 52), 100, false);
+            offset -= cursed.getValue();
         }
 
     }
@@ -151,6 +146,7 @@ public class CondenserHandledScreen extends HandledScreen<ScreenHandler> {
         int startX = x + screen.x;
         int startY = y + screen.y;
         do {
+
             int renderHeight = Math.min(spriteHeight, height);
             height -= renderHeight;
             float v2 = sprite.getFrameV((16f * renderHeight) / spriteHeight);

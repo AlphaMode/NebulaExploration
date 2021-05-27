@@ -19,6 +19,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.fluid.LavaFluid;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -79,18 +80,19 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity {
     public ScreenHandler createMenu(int syncID, PlayerInventory inventory, PlayerEntity player) {
         this.gases.clear();
         LogManager.getLogger("c").info(NebulaGases.NITROGEN);
-        gases.add(FluidKeys.get(NebulaGases.NITROGEN).withAmount(100));
+        //gases.add(FluidKeys.get(NebulaGases.NITROGEN).withAmount(100));
         for (FluidVolume gas: gases
         ) {
 
             LogManager.getLogger("c").info(gas.getAmount_F().asInt(1000));
         }
+
         return new CondenserScreenHandler(syncID,inventory, this);
     }
 
     @Override
     protected ScreenHandler createScreenHandler(int syncID, PlayerInventory inventory) {
-        gases.add(FluidKeys.get(NebulaGases.NITROGEN).withAmount(100));
+        //gases.add(FluidKeys.get(NebulaGases.NITROGEN).withAmount(100));
         for (FluidVolume gas: gases
         ) {
             LogManager.getLogger("c").info(gas);

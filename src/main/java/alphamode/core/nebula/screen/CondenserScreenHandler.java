@@ -18,22 +18,26 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class CondenserScreenHandler extends ScreenHandler {
     private CondenserBlockEntity inventory;
+    private PropertyDelegate propertyDelegate;
 
     public List<FluidVolume> getGases() {
         return inventory.getGases();
     }
 
-    public CondenserScreenHandler(int syncId, PlayerInventory playerInventory, CondenserBlockEntity inventory) {
+    public CondenserScreenHandler(int syncId, PlayerInventory playerInventory, CondenserBlockEntity inventory/*, PropertyDelegate propertyDelegate*/) {
         super(NebulaScreens.CONDENSER_MENU,syncId);
         checkSize(inventory, 1);
         this.inventory = inventory;
         inventory.onOpen(playerInventory.player);
+        //this.addProperties(propertyDelegate);
+        //this.propertyDelegate = propertyDelegate;
         int m;
         int l;
         this.addSlot(new Slot(inventory,0 ,66,52));
@@ -51,7 +55,7 @@ public class CondenserScreenHandler extends ScreenHandler {
         PacketByteBuf buf = PacketByteBufs.create();
         CompoundTag tag = new CompoundTag();
         ListTag listTag = new ListTag();
-        listTag.add(NormalFluidVolume.create(NebulaGases.NITROGEN, 100).toTag());
+        //listTag.add(NormalFluidVolume.create(NebulaGases.NITROGEN, 100).toTag());
         tag.put("gases", listTag);
         buf.writeCompoundTag(tag);
         ServerPlayNetworking.send((ServerPlayerEntity) playerInventory.player, id("condenser_update"), buf);
@@ -63,6 +67,11 @@ public class CondenserScreenHandler extends ScreenHandler {
     public CondenserScreenHandler(int i, PlayerInventory playerInventory) {
         super(NebulaScreens.CONDENSER_MENU,i);
 
+    }
+
+    @Environment(EnvType.CLIENT)
+    public int getAmount(int index) {
+        return propertyDelegate.get(index);
     }
 
     @Environment(EnvType.SERVER)

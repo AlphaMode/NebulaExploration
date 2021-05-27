@@ -1,13 +1,8 @@
 package alphamode.core.nebula.gases;
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.MapCodec;
 
-import java.util.Map;
-
-import net.minecraft.block.BlockState;
 import net.minecraft.state.State;
 import net.minecraft.state.property.Property;
 

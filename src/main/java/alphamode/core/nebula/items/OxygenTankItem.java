@@ -1,17 +1,14 @@
 package alphamode.core.nebula.items;
 
-import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.storage.Tank;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
+
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.world.World;
 
 public class OxygenTankItem extends Item implements Tank {

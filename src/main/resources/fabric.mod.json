@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "nebulamod",
+  "id": "nebula",
   "version": "${version}",
-  "name": "NebulaMod",
+  "name": "Nebula",
   "description": "",
   "authors": [
     "AlphaMode"

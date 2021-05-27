@@ -37,7 +37,7 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
+    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:5.8.9"
     modImplementation("me.shedaniel:RoughlyEnoughItems:5.11.202")
     modApi "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:2.8.3"
     modApi "alexiil.mc.lib:libblockattributes-fluids:0.8.4"

@@ -5,10 +5,16 @@ import alphamode.core.nebula.dimensions.NebulaDimensions;
 import alphamode.core.nebula.fluids.NebulaFluids;
 import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.items.NebulaItems;
+import alphamode.core.nebula.rei.NebulaPlugin;
 import alphamode.core.nebula.screen.NebulaScreens;
 import alphamode.core.nebula.util.Util;
 import alphamode.core.nebula.worldgen.Features.NebulaFeatures;
+import me.shedaniel.rei.RoughlyEnoughItemsCore;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -19,7 +25,11 @@ import net.minecraft.world.dimension.DimensionOptions;
 
 public class NebulaMod implements ModInitializer {
 
+
+
     public static final String MOD_ID = "nebula";
+
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
     public static final ItemGroup SPACE_TAB = Util.createTab(id("space_misc"), () -> new ItemStack(NebulaItems.BASIC_OXYGEN_TANK));
     public static final ItemGroup SPACE_MACHINES = Util.createTab(id("space_machines"), () -> new ItemStack(NebulaItems.CONDENSER));
@@ -42,5 +52,9 @@ public class NebulaMod implements ModInitializer {
         NebulaFeatures.init();
         NebulaFluids.init();
         NebulaDimensions.init();
+        if(FabricLoader.getInstance().isModLoaded("roughlyenoughitems")) {
+            LOGGER.info("Loading REI plugin.");
+            RoughlyEnoughItemsCore.registerPlugin(new NebulaPlugin());
+        }
     }
 }
