@@ -20,7 +20,7 @@ public class NebulaDimensions {
     static {
         SPACE = Registry.register(NebulaRegistry.ATMOSPHERE, id("space"), new Atmosphere(id("space"), ImmutableMap.of(NebulaGases.EMPTY,0)));
         OUTTER_SPACE = Registry.register(NebulaRegistry.ATMOSPHERE, id("outter_space"), new Atmosphere(id("outter_space"), ImmutableMap.of(NebulaGases.NITROGEN, 100)));
-        EARTH_ATMOSPHERE = Registry.register(NebulaRegistry.ATMOSPHERE, id("earth"),new Atmosphere(DimensionType.OVERWORLD_ID, ImmutableMap.of(NebulaGases.OXYGEN,100,NebulaGases.NITROGEN,300)));
+        EARTH_ATMOSPHERE = Registry.register(NebulaRegistry.ATMOSPHERE, id("earth"),new Atmosphere(DimensionType.OVERWORLD_ID, ImmutableMap.of(NebulaGases.OXYGEN,1001,NebulaGases.NITROGEN,3027)));
     }
 
 }

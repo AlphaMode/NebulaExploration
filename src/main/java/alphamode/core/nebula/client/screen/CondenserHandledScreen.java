@@ -1,8 +1,11 @@
 package alphamode.core.nebula.client.screen;
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alphamode.core.nebula.NebulaMod;
 import alphamode.core.nebula.gases.Gas;
+import alphamode.core.nebula.gases.GasVolume;
+import alphamode.core.nebula.screen.CondenserScreenHandler;
 import alphamode.core.nebula.util.Util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
@@ -12,7 +15,6 @@ import static alphamode.core.nebula.NebulaMod.id;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.BufferBuilder;
@@ -23,7 +25,6 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -31,44 +32,125 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix4f;
 
-public class CondenserHandledScreen extends HandledScreen<ScreenHandler> {
+public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler> {
     private static final Identifier TEXTURE = id("textures/gui/condenser.png");
-    private List<FluidVolume> tank;
+    private List<GasVolume> tank;
+    //Gas storaged in millibuckets
+    private final int maxAmount = 8000;
 
-    private boolean isHovering(int mouseX, int mouseY) {
-        int checkX = mouseX - this.x;
-        int checkY = mouseY - this.y;
-        return checkX >= this.x && checkY >= this.y && checkX < this.x + this.width && checkY < this.y + this.height;
+    public void updateTank(List<GasVolume> gases) {
+        this.tank = gases;
+    }
+
+    /**
+     * Calculate the rendering heights for all the liquids
+     *
+     * @param liquids  The liquids
+     * @param capacity Max capacity of smeltery, to calculate how much height one liquid takes up
+     * @param height   Maximum height, basically represents how much height full capacity is
+     * @param min      Minimum amount of height for a fluid. A fluid can never have less than this value height returned
+     * @return Array with heights corresponding to input-list liquids
+     */
+    public static int[] calcLiquidHeights(List<FluidVolume> liquids, FluidAmount capacity, int height, int min) {
+        int[] fluidHeights = new int[liquids.size()];
+
+        FluidAmount totalFluidAmount = FluidAmount.ZERO;
+        if (liquids.size() > 0) {
+            for(int i = 0; i < liquids.size(); i++) {
+                FluidVolume liquid = liquids.get(i);
+
+                float h = (float) liquid.getAmount_F().div(capacity).asInexactDouble();
+                totalFluidAmount.add(liquid.amount());
+                fluidHeights[i] = Math.max(min, (int) Math.ceil(h * (float) height));
+            }
+
+            // if not completely full, leave a few pixels for the empty tank display
+            if(totalFluidAmount.isLessThan(capacity)) {
+                height -= min;
+            }
+
+            // check if we have enough height to render everything, if not remove pixels from the tallest liquid
+            int sum;
+            do {
+                sum = 0;
+                int biggest = -1;
+                int m = 0;
+                for(int i = 0; i < fluidHeights.length; i++) {
+                    sum += fluidHeights[i];
+                    if(fluidHeights[i] > biggest) {
+                        biggest = fluidHeights[i];
+                        m = i;
+                    }
+                }
+
+                // we can't get a result without going negative
+                if(fluidHeights[m] == 0) {
+                    break;
+                }
+
+                // remove a pixel from the biggest one
+                if(sum > height) {
+                    fluidHeights[m]--;
+                }
+            } while(sum > height);
+        }
+
+        return fluidHeights;
+    }
+
+    public void renderGases(MatrixStack matrixStack) {
+        FluidRenderHandler fluidRenderHandler = FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER.getStill());
+        Sprite[] sprites = fluidRenderHandler.getFluidSprites(client.world, client.world == null ? null : BlockPos.ORIGIN, Fluids.WATER.getStill().getDefaultState());
+        //Atmosphere gases
+        int aoffset = 67;
+        int oa = 0;
+        List<FluidVolume> gases = new ArrayList<>();
+        for (Map.Entry<Gas, Integer> cursed : Util.getAtmosphereGas(client.player).entrySet()) {
+            gases.add(new GasVolume(cursed.getKey(), cursed.getValue()).toFluidVolume());
+            setColorRGBA(cursed.getKey().getColor());
+            //oa =+ calcGasHeight(cursed.getValue(),oa);
+
+
+            aoffset -= cursed.getValue();
+        }
+        for(int gas: calcLiquidHeights(gases,FluidAmount.ofWhole(8000),52,0)) {
+            //NebulaMod.LOGGER.info(gas);
+            renderTiledTextureAtlas(matrixStack, this, sprites[0], 11, aoffset - gas, 20, gas, 100, false);
+        }
+        //Tank Gases
+        int boffset = 67;
+        for (GasVolume gas : tank) {
+            setColorRGBA(gas.getGas().getColor());
+            renderTiledTextureAtlas(matrixStack, this, sprites[0], 39, boffset - gas.getAmount(), 20, gas.getAmount(), 100, false);
+        }
+    }
+
+    private void renderTankTooltip(MatrixStack matrixStack, int x, int y) {
+
     }
 
     private void renderAtmosphericGasTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
         int offset = 67;
-        for(Map.Entry<Gas, Integer> cursed:Util.getAtmosphereGas(client.player).entrySet()) {
+        for (Map.Entry<Gas, Integer> cursed : Util.getAtmosphereGas(client.player).entrySet()) {
             int checkX = mouseX - this.x;
             int checkY = mouseY - this.y;
 
             List<Text> UwU = new ArrayList<>();
 
-            //UwU.add(new LiteralText(((CondenserScreenHandler)getScreenHandler()).getFluids().get(0).localizeInTank(FluidAmount.of(1, 1000))));
             renderTooltip(matrixStack, UwU, mouseX, mouseY);
             int temp = Util.clamp(cursed.getValue(), 0, 52);
-            //if(isHovering(11,offset-temp)) {
-            //NebulaMod.LOGGER.info(temp+""+cursed.getKey().getName());
-            if(checkX >= 11 && checkY >= offset-temp && checkX < 11 + 20 && checkY < offset-temp + temp) {
+
+            if (checkX >= 11 && checkY >= offset - temp && checkX < 11 + 20 && checkY < offset - temp + temp) {
                 List<Text> tooltip = new ArrayList<>();
 
                 tooltip.add(cursed.getKey().getName());
 
-                tooltip.add(new TranslatableText("gui.nebula.concentration").append(": "+Util.getAtmosphereGas(client.player).get(cursed.getKey())+" mB/tick").formatted(Formatting.GRAY));
+                tooltip.add(new TranslatableText("gui.nebula.concentration").append(": " + Util.getAtmosphereGas(client.player).get(cursed.getKey()) + " mB/tick").formatted(Formatting.GRAY));
                 Util.appendModIdToTooltips(tooltip, NebulaMod.MOD_ID);
                 renderTooltip(matrixStack, tooltip, mouseX, mouseY);
             }
             offset -= cursed.getValue();
         }
-
-    }
-
-    private void renderTankTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
 
     }
 
@@ -97,21 +179,8 @@ public class CondenserHandledScreen extends HandledScreen<ScreenHandler> {
         return (c) & 0xFF;
     }
 
-    public void renderGases(MatrixStack matrixStack) {
-        FluidRenderHandler fluidRenderHandler = FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER.getStill());
-        Sprite[] sprites = fluidRenderHandler.getFluidSprites(client.world, client.world == null ? null : BlockPos.ORIGIN, Fluids.WATER.getStill().getDefaultState());
 
-        int offset = 67;
-        for(Map.Entry<Gas, Integer> cursed:Util.getAtmosphereGas(client.player).entrySet()) {
-            setColorRGBA(cursed.getKey().getColor());
-            //NebulaMod.LOGGER.info(Util.clamp(cursed.getValue(), 0, 52));
-            renderTiledTextureAtlas(matrixStack, this, sprites[0], 11, offset-Util.clamp(cursed.getValue(), 0, 52), 20, Util.clamp(cursed.getValue(), 0, 52), 100, false);
-            offset -= cursed.getValue();
-        }
-
-    }
-
-    public CondenserHandledScreen(ScreenHandler abstractContainerMenu, PlayerInventory inventory, Text component) {
+    public CondenserHandledScreen(CondenserScreenHandler abstractContainerMenu, PlayerInventory inventory, Text component) {
         super(abstractContainerMenu, inventory, component);
         tank = new ArrayList<>();
 

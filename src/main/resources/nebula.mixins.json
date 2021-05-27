@@ -1,11 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "",
+  "package": "alphamode.core.nebula.client.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
   ],
   "client": [
+    "LevelPropertiesMixin"
   ],
   "injectors": {
     "defaultRequire": 1

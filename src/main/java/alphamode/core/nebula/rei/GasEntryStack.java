@@ -63,7 +63,7 @@ public class GasEntryStack extends AbstractEntryStack {
 
     @Override
     public Type getType() {
-        return Type.FLUID;
+        return Type.EMPTY;
     }
 
     @Override

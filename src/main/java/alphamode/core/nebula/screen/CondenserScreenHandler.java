@@ -1,43 +1,26 @@
 package alphamode.core.nebula.screen;
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.lib.attributes.fluid.volume.NormalFluidVolume;
 import alphamode.core.nebula.blocks.entity.CondenserBlockEntity;
-import alphamode.core.nebula.gases.NebulaGases;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import static alphamode.core.nebula.NebulaMod.id;
-import java.util.ArrayList;
-import java.util.List;
+import alphamode.core.nebula.packet.GasTankS2CPacket;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class CondenserScreenHandler extends ScreenHandler {
+    private ServerPlayerEntity playerEntity;
     private CondenserBlockEntity inventory;
-    private PropertyDelegate propertyDelegate;
 
-    public List<FluidVolume> getGases() {
-        return inventory.getGases();
-    }
-
-    public CondenserScreenHandler(int syncId, PlayerInventory playerInventory, CondenserBlockEntity inventory/*, PropertyDelegate propertyDelegate*/) {
+    public CondenserScreenHandler(int syncId, PlayerInventory playerInventory, CondenserBlockEntity inventory) {
         super(NebulaScreens.CONDENSER_MENU,syncId);
         checkSize(inventory, 1);
         this.inventory = inventory;
+        if(playerInventory.player instanceof ServerPlayerEntity)
+            this.playerEntity = (ServerPlayerEntity) playerInventory.player;
         inventory.onOpen(playerInventory.player);
-        //this.addProperties(propertyDelegate);
-        //this.propertyDelegate = propertyDelegate;
         int m;
         int l;
         this.addSlot(new Slot(inventory,0 ,66,52));
@@ -51,30 +34,27 @@ public class CondenserScreenHandler extends ScreenHandler {
         for (m = 0; m < 9; ++m) {
             this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
         }
-
-        PacketByteBuf buf = PacketByteBufs.create();
-        CompoundTag tag = new CompoundTag();
-        ListTag listTag = new ListTag();
-        //listTag.add(NormalFluidVolume.create(NebulaGases.NITROGEN, 100).toTag());
-        tag.put("gases", listTag);
-        buf.writeCompoundTag(tag);
-        ServerPlayNetworking.send((ServerPlayerEntity) playerInventory.player, id("condenser_update"), buf);
-        //NebulaComponents.GAS_COMPONENT.get(this.inventory).setFluids(temp);
-        //LogManager.getLogger("c").info(NebulaComponents.GAS_COMPONENT.get(this.inventory).getFluids().get(0).localizeInTank(FluidAmount.of(1,1000)));
-        //NebulaComponents.GAS_COMPONENT.sync(this.inventory);
     }
 
     public CondenserScreenHandler(int i, PlayerInventory playerInventory) {
-        super(NebulaScreens.CONDENSER_MENU,i);
-
+        this(i,playerInventory,new CondenserBlockEntity());
+        //super(NebulaScreens.CONDENSER_MENU,i);
     }
 
-    @Environment(EnvType.CLIENT)
-    public int getAmount(int index) {
-        return propertyDelegate.get(index);
+    public void tick() {
+        playerEntity.networkHandler.sendPacket(GasTankS2CPacket.create(inventory.getGases()));
     }
 
-    @Environment(EnvType.SERVER)
+    @Override
+    public void close(PlayerEntity player) {
+        super.close(player);
+        inventory.handlers.remove(this);
+    }
+
+    public CondenserBlockEntity getInventory() {
+        return inventory;
+    }
+
     @Override
     public ItemStack transferSlot(PlayerEntity player, int invSlot) {
         ItemStack newStack = ItemStack.EMPTY;
@@ -99,6 +79,8 @@ public class CondenserScreenHandler extends ScreenHandler {
 
         return newStack;
     }
+
+
 
     @Override
     public boolean canUse(PlayerEntity player) {

@@ -25,8 +25,6 @@ import net.minecraft.world.dimension.DimensionOptions;
 
 public class NebulaMod implements ModInitializer {
 
-
-
     public static final String MOD_ID = "nebula";
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);

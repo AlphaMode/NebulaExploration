@@ -1,8 +1,12 @@
 package alphamode.core.nebula.util;
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alphamode.core.nebula.NebulaRegistry;
 import alphamode.core.nebula.dimensions.NebulaDimensions;
 import alphamode.core.nebula.gases.Gas;
+import alphamode.core.nebula.gases.GasVolume;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.rei.api.ClientHelper;
 import me.shedaniel.rei.utils.FormattingUtils;
@@ -12,6 +16,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import org.lwjgl.opengl.GL11;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -96,6 +101,14 @@ public class Util {
             return "";
         String s = FabricLoader.getInstance().getModContainer(modid).map(ModContainer::getMetadata).map(ModMetadata::getName).orElse(modid);
         return s;
+    }
+
+    public static List<FluidVolume> toFluidVolumeArray(List<GasVolume> gasVolumes) {
+        List<FluidVolume> fluidsGases = new ArrayList<>();
+        for(GasVolume gas : gasVolumes) {
+            fluidsGases.add(gas.toFluidVolume());
+        }
+        return fluidsGases;
     }
 
     public static List<Text> appendModIdToTooltips(List<Text> components, String modId) {

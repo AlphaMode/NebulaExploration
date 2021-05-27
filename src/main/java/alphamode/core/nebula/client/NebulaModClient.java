@@ -6,6 +6,7 @@ import alphamode.core.nebula.client.screen.CondenserHandledScreen;
 import alphamode.core.nebula.gases.Gas;
 import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.items.NebulaItems;
+import alphamode.core.nebula.packet.GasTankS2CPacket;
 import alphamode.core.nebula.screen.NebulaScreens;
 import me.shedaniel.rei.api.REIPluginEntry;
 import net.fabricmc.api.ClientModInitializer;
@@ -56,6 +57,7 @@ public class NebulaModClient implements ClientModInitializer {
             }
             return itemStack.getOrCreateTag().getInt("ammount") == 0 ? 0 : getStage(itemStack.getOrCreateTag().getInt("ammount"));
         });
+        ClientPlayNetworking.registerGlobalReceiver(GasTankS2CPacket.ID, GasTankS2CPacket::onPacket);
         /*ClientPlayNetworking.registerGlobalReceiver(id("condenser_update"),(client, handler, buf, responseSender) -> {
             client.execute(() -> {
                 List<FluidVolume> gases = new ArrayList<>();
