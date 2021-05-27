@@ -5,10 +5,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -34,9 +32,9 @@ public class FluidVolumeComponent implements FluidVolumeCompound {
     }
 
     @Override
-    public void readFromNbt(CompoundTag tag) {
+    public void readFromNbt(NbtCompound tag) {
         List<FluidVolume> temp = new ArrayList<>();
-        ListTag gasesTag = tag.getList("gases", 0);
+        NbtList gasesTag = tag.getList("gases", 0);
         for(int i = 0; i < gasesTag.size(); ++i) {
             //temp.add(FluidVolume.fromTag((CompoundTag) gasesTag.get(i)));
         }
@@ -44,8 +42,8 @@ public class FluidVolumeComponent implements FluidVolumeCompound {
     }
 
     @Override
-    public void writeToNbt(CompoundTag tag) {
-        ListTag gasesTag = new ListTag();
+    public void writeToNbt(NbtCompound tag) {
+        NbtList gasesTag = new NbtList();
         if(gases == null) {
             tag.put("gases", gasesTag);
             return;

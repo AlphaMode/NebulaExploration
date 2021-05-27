@@ -2,10 +2,14 @@ package alphamode.core.nebula.blocks;
 
 import alphamode.core.nebula.blocks.entity.CondenserBlockEntity;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.util.ActionResult;
@@ -49,9 +53,16 @@ public class CondenserBlock extends BlockWithEntity  {
     }
 
 
-
+    @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView blockGetter) {
-        return new CondenserBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new CondenserBlockEntity(pos,state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        CondenserBlockEntity blockEntity = world.getBlockEntity(state);
+        return super.getTicker(world, state, type);
     }
 }

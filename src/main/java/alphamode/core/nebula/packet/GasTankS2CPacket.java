@@ -16,9 +16,8 @@ import java.util.List;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
@@ -28,9 +27,9 @@ public class GasTankS2CPacket {
     public static final Identifier ID = id("condenser_packet");
 
     public static void onPacket(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
-        CompoundTag data = buf.readCompoundTag();
+        NbtCompound data = buf.readNbt();
         List<GasVolume> gases = new ArrayList<>();
-        ListTag gasesList = data.getList("gases", 10);
+        NbtList gasesList = data.getList("gases", 10);
         for(int i = 0; i<gasesList.size();i++) {
             gases.add(GasVolume.fromTag(gasesList.getCompound(i)));
         }
@@ -45,13 +44,13 @@ public class GasTankS2CPacket {
 
     public static Packet<?> create(List<GasVolume> gases) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        ListTag gasesList = new ListTag();
+        NbtList gasesList = new NbtList();
         for(GasVolume gas : gases) {
-            gasesList.add(gas.toTag(new CompoundTag()));
+            gasesList.add(gas.toTag(new NbtCompound()));
         }
-        CompoundTag data = new CompoundTag();
+        NbtCompound data = new NbtCompound();
         data.put("gases", gasesList);
-        buf.writeCompoundTag(data);
+        buf.writeNbt(data);
         return ServerPlayNetworking.createS2CPacket(ID,buf);
     }
 

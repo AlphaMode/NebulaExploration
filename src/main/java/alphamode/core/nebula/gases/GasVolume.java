@@ -7,8 +7,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.attributes.fluid.volume.SimpleFluidKey;
 import alexiil.mc.lib.attributes.fluid.volume.SimpleFluidVolume;
 import alphamode.core.nebula.NebulaRegistry;
-
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
 public final class GasVolume  {
@@ -35,11 +34,11 @@ public final class GasVolume  {
         return this.gasAmount;
     }
 
-    public static GasVolume fromTag(CompoundTag tag) {
+    public static GasVolume fromTag(NbtCompound tag) {
         return new GasVolume(NebulaRegistry.GAS.get(new Identifier(tag.getString("id"))),tag.getInt("amount"));
     }
 
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound toTag(NbtCompound tag) {
         tag.putString("id", NebulaRegistry.GAS.getId(owner).toString());
         tag.putInt("amount", gasAmount);
         return tag;

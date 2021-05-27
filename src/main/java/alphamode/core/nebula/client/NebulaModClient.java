@@ -34,8 +34,6 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -95,7 +93,7 @@ public class NebulaModClient implements ClientModInitializer {
              * Get the sprites from the block atlas when resources are reloaded
              */
             @Override
-            public void apply(ResourceManager resourceManager) {
+            public void reload(ResourceManager resourceManager) {
                 final Function<Identifier, Sprite> atlas = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
                 fluidSprites[0] = atlas.apply(stillSpriteId);
             }

@@ -13,32 +13,34 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Tickable;
-import net.minecraft.util.collection.DefaultedList;
 
-public class CondenserBlockEntity extends LockableContainerBlockEntity implements Tickable {
+import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
+
+public class CondenserBlockEntity extends LockableContainerBlockEntity {
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(1,ItemStack.EMPTY);
     public List<CondenserScreenHandler> handlers = new ArrayList<>();
     private List<GasVolume> gases = new ArrayList<>();
-    public CondenserBlockEntity() {
-        super(NebulaBlocks.CONDENSER_BLOCK_ENTITY);
+    public CondenserBlockEntity(BlockPos blockPos, BlockState blockState) {
+        super(NebulaBlocks.CONDENSER_BLOCK_ENTITY,blockPos,blockState);
     }
 
     @Override
-    public void fromTag(BlockState blockState, CompoundTag compoundTag) {
-        super.fromTag(blockState, compoundTag);
-        Inventories.fromTag(compoundTag, this.items);
-        ListTag gasesTag = compoundTag.getList("gases", 10);
+    public void readNbt(NbtCompound compoundTag) {
+        super.readNbt(compoundTag);
+        Inventories.readNbt(compoundTag, this.items);
+        NbtList gasesTag = compoundTag.getList("gases", 10);
         this.gases = new ArrayList<>();
         for(int i = 0; i < gasesTag.size(); ++i) {
             //this.gases.add(FluidVolume.fromTag(compoundTag));
@@ -46,15 +48,16 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag compoundTag) {
-        super.toTag(compoundTag);
-        Inventories.toTag(compoundTag, this.items);
-        ListTag gasesTag = new ListTag();
-        /*for(FluidVolume gas : gases) {
-            CompoundTag gasTag = new CompoundTag();
+    public NbtCompound writeNbt(NbtCompound compoundTag) {
+        super.writeNbt(compoundTag);
+        Inventories.writeNbt(compoundTag, this.items);
+        NbtList gasesTag = new NbtList();
+        for(GasVolume gas : gases) {
+            NbtCompound gasTag = new NbtCompound();
             gas.toTag(compoundTag);
-            gasesTag.addTag(gasesTag.size(), gasTag);
-        }*/
+            gasesTag.add(gasTag);
+            //gasesTag.addTag(gasesTag.size(), gasTag);
+        }
         compoundTag.put("gases", gasesTag);
         return compoundTag;
     }
@@ -147,6 +150,8 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
     public void clear() {
         items.clear();
     }
+
+
 
     @Override
     public void tick() {

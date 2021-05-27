@@ -36,9 +36,9 @@ public class NebulaMod implements ModInitializer {
         return new Identifier(MOD_ID, id);
     }
 
-    private final RegistryKey<DimensionOptions> DIMENSION_KEY = RegistryKey.of(Registry.DIMENSION_OPTIONS,id("outter_space"));
+    private final RegistryKey<DimensionOptions> DIMENSION_KEY = RegistryKey.of(Registry.DIMENSION_KEY,id("outter_space"));
 
-    private RegistryKey<World> LEVEL_KEY = RegistryKey.of(Registry.DIMENSION, DIMENSION_KEY.getValue());
+    private RegistryKey<World> LEVEL_KEY = RegistryKey.of(Registry.WORLD_KEY, DIMENSION_KEY.getValue());
 
     @Override
     public void onInitialize() {

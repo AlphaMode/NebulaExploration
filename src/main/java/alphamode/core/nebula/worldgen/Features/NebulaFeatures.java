@@ -21,7 +21,7 @@ public class NebulaFeatures {
     public static ConfiguredFeature<?,?> ALUMINUM_ORE;
 
     public static void init() {
-        RegistryKey<ConfiguredFeature<?,?>> aluminumOreKey = RegistryKey.of(Registry.CONFIGURED_FEATURE_WORLDGEN, id("aluminum_ore_overworld"));
+        RegistryKey<ConfiguredFeature<?,?>> aluminumOreKey = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, id("aluminum_ore_overworld"));
         Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, aluminumOreKey.getValue(), ALUMINUM_ORE);
         BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Feature.UNDERGROUND_ORES,aluminumOreKey);
     }
