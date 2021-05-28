@@ -139,6 +139,7 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
     //Cursed tinker's method
     private static void renderTiledTextureAtlas(MatrixStack matrices, HandledScreen<?> screen, Sprite sprite, int x, int y, int width, int height, int depth, boolean upsideDown) {
         // start drawing sprites
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
         //screen.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
         BufferBuilder builder = Tessellator.getInstance().getBuffer();
