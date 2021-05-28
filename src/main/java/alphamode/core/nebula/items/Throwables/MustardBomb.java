@@ -64,7 +64,7 @@ public class MustardBomb extends ThrownItemEntity {
             this.makeAreaOfEffectCloud();
 
             this.world.sendEntityStatus(this, (byte)3);
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
 
     }

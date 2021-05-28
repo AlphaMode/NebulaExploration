@@ -1,7 +1,5 @@
 package alphamode.core.nebula.client.screen;
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alphamode.core.nebula.NebulaMod;
 import alphamode.core.nebula.gases.Gas;
 import alphamode.core.nebula.gases.GasVolume;
@@ -10,17 +8,13 @@ import alphamode.core.nebula.util.Util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import org.lwjgl.opengl.GL11;
 import static alphamode.core.nebula.NebulaMod.id;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -42,61 +36,6 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         this.tank = gases;
     }
 
-    /**
-     * Calculate the rendering heights for all the liquids
-     *
-     * @param liquids  The liquids
-     * @param capacity Max capacity of smeltery, to calculate how much height one liquid takes up
-     * @param height   Maximum height, basically represents how much height full capacity is
-     * @param min      Minimum amount of height for a fluid. A fluid can never have less than this value height returned
-     * @return Array with heights corresponding to input-list liquids
-     */
-    public static int[] calcLiquidHeights(List<FluidVolume> liquids, FluidAmount capacity, int height, int min) {
-        int[] fluidHeights = new int[liquids.size()];
-
-        FluidAmount totalFluidAmount = FluidAmount.ZERO;
-        if (liquids.size() > 0) {
-            for(int i = 0; i < liquids.size(); i++) {
-                FluidVolume liquid = liquids.get(i);
-
-                float h = (float) liquid.getAmount_F().div(capacity).asInexactDouble();
-                totalFluidAmount.add(liquid.amount());
-                fluidHeights[i] = Math.max(min, (int) Math.ceil(h * (float) height));
-            }
-
-            // if not completely full, leave a few pixels for the empty tank display
-            if(totalFluidAmount.isLessThan(capacity)) {
-                height -= min;
-            }
-
-            // check if we have enough height to render everything, if not remove pixels from the tallest liquid
-            int sum;
-            do {
-                sum = 0;
-                int biggest = -1;
-                int m = 0;
-                for(int i = 0; i < fluidHeights.length; i++) {
-                    sum += fluidHeights[i];
-                    if(fluidHeights[i] > biggest) {
-                        biggest = fluidHeights[i];
-                        m = i;
-                    }
-                }
-
-                // we can't get a result without going negative
-                if(fluidHeights[m] == 0) {
-                    break;
-                }
-
-                // remove a pixel from the biggest one
-                if(sum > height) {
-                    fluidHeights[m]--;
-                }
-            } while(sum > height);
-        }
-
-        return fluidHeights;
-    }
 
     public void renderGases(MatrixStack matrixStack) {
         FluidRenderHandler fluidRenderHandler = FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER.getStill());
@@ -104,19 +43,16 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         //Atmosphere gases
         int aoffset = 67;
         int oa = 0;
-        List<FluidVolume> gases = new ArrayList<>();
+        List<Gas> gases = new ArrayList<>();
         for (Map.Entry<Gas, Integer> cursed : Util.getAtmosphereGas(client.player).entrySet()) {
-            gases.add(new GasVolume(cursed.getKey(), cursed.getValue()).toFluidVolume());
+            //gases.add(new GasVolume(cursed.getKey(), cursed.getValue()).toFluidVolume());
             setColorRGBA(cursed.getKey().getColor());
             //oa =+ calcGasHeight(cursed.getValue(),oa);
 
 
             aoffset -= cursed.getValue();
         }
-        for(int gas: calcLiquidHeights(gases,FluidAmount.ofWhole(8000),52,0)) {
-            //NebulaMod.LOGGER.info(gas);
-            renderTiledTextureAtlas(matrixStack, this, sprites[0], 11, aoffset - gas, 20, gas, 100, false);
-        }
+
         //Tank Gases
         int boffset = 67;
         for (GasVolume gas : tank) {
@@ -159,8 +95,7 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         float r = red(color) / 255.0F;
         float g = green(color) / 255.0F;
         float b = blue(color) / 255.0F;
-
-        RenderSystem.color4f(r, g, b, a);
+        RenderSystem.setShaderColor(r, g, b, a);
     }
 
     public static int alpha(int c) {
@@ -191,8 +126,9 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         int ax = (width - backgroundWidth) / 2;
         int ay = (height - backgroundHeight) / 2;
         renderGases(matrixStack);
-        RenderSystem.color4f(1f, 1f, 1f, 1f);
-        client.getTextureManager().bindTexture(TEXTURE);
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        //client.getTextureManager().bindTexture(TEXTURE);
+        RenderSystem.setShaderTexture(0, TEXTURE);
         RenderSystem.disableDepthTest();
         drawTexture(matrixStack, ax + 11, ay + 16, 0, 166, 20, 59);
         drawTexture(matrixStack, ax + 39, ay + 16, 0, 166, 20, 59);
@@ -203,9 +139,10 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
     //Cursed tinker's method
     private static void renderTiledTextureAtlas(MatrixStack matrices, HandledScreen<?> screen, Sprite sprite, int x, int y, int width, int height, int depth, boolean upsideDown) {
         // start drawing sprites
-        screen.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
+        RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
+        //screen.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
         BufferBuilder builder = Tessellator.getInstance().getBuffer();
-        builder.begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
+        builder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
 
         // tile vertically
         float u1 = sprite.getMinU();
@@ -244,7 +181,8 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
 
         // finish drawing sprites
         builder.end();
-        RenderSystem.enableAlphaTest();
+        //RenderSystem
+        //RenderSystem.enableAlphaTest();
         BufferRenderer.draw(builder);
     }
 

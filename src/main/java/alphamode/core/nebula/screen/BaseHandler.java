@@ -16,6 +16,6 @@ public class BaseHandler<T extends BlockEntity> extends ScreenHandler {
 
     @Override
     public boolean canUse(PlayerEntity player) {
-        return player.inventory.canPlayerUse(player);
+        return player.getInventory().canPlayerUse(player);
     }
 }

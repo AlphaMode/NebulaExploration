@@ -1,6 +1,5 @@
 package alphamode.core.nebula.client;
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alphamode.core.nebula.NebulaRegistry;
 import alphamode.core.nebula.client.screen.CondenserHandledScreen;
 import alphamode.core.nebula.gases.Gas;
@@ -8,37 +7,28 @@ import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.items.NebulaItems;
 import alphamode.core.nebula.packet.GasTankS2CPacket;
 import alphamode.core.nebula.screen.NebulaScreens;
-import me.shedaniel.rei.api.REIPluginEntry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-
 import static alphamode.core.nebula.NebulaMod.id;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockRenderView;
 
 @Environment(EnvType.CLIENT)
@@ -49,11 +39,11 @@ public class NebulaModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ScreenRegistry.register(NebulaScreens.CONDENSER_MENU, CondenserHandledScreen::new);
-        FabricModelPredicateProviderRegistry.register(NebulaItems.BASIC_OXYGEN_TANK, id("ammount"),(itemStack, clientLevel, livingEntity) -> {
+        FabricModelPredicateProviderRegistry.register(NebulaItems.BASIC_OXYGEN_TANK, id("amount"),(itemStack, clientLevel, livingEntity,ra) -> {
             if(livingEntity == null) {
                 return 0;
             }
-            return itemStack.getOrCreateTag().getInt("ammount") == 0 ? 0 : getStage(itemStack.getOrCreateTag().getInt("ammount"));
+            return itemStack.getOrCreateTag().getInt("amount") == 0 ? 0 : getStage(itemStack.getOrCreateTag().getInt("amount"));
         });
         ClientPlayNetworking.registerGlobalReceiver(GasTankS2CPacket.ID, GasTankS2CPacket::onPacket);
         /*ClientPlayNetworking.registerGlobalReceiver(id("condenser_update"),(client, handler, buf, responseSender) -> {

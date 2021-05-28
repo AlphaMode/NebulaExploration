@@ -62,7 +62,7 @@ public class CondenserBlock extends BlockWithEntity  {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        CondenserBlockEntity blockEntity = world.getBlockEntity(state);
-        return super.getTicker(world, state, type);
+
+        return CondenserBlockEntity::tick;
     }
 }

@@ -20,16 +20,16 @@ public class MustardGasBomb extends Item {
     public TypedActionResult<ItemStack> use(World level, PlayerEntity player, Hand interactionHand) {
         ItemStack itemStack = player.getStackInHand(interactionHand);
 
-        level.playSound((PlayerEntity)null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (RANDOM.nextFloat() * 0.4F + 0.8F));
+        level.playSound((PlayerEntity)null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (/*RANDOM.nextFloat() */0.4F + 0.8F));
         if (!level.isClient) {
             MustardBomb mustardBomb = new MustardBomb(level, player);
             mustardBomb.setItem(itemStack);
-            mustardBomb.setProperties(player, player.pitch, player.yaw, 0.0F, 1.5F, 1.0F);
+            mustardBomb.setProperties(player, player.getPitch(), player.getYaw(), 0.0F, 1.5F, 1.0F);
             level.spawnEntity(mustardBomb);
         }
 
         player.incrementStat(Stats.USED.getOrCreateStat(this));
-        if (!player.abilities.creativeMode) {
+        if (!player.getAbilities().creativeMode) {
             itemStack.decrement(1);
         }
 

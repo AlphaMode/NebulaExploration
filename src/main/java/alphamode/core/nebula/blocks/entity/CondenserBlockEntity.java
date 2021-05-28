@@ -1,19 +1,15 @@
 package alphamode.core.nebula.blocks.entity;
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alphamode.core.nebula.NebulaMod;
 import alphamode.core.nebula.blocks.NebulaBlocks;
 import alphamode.core.nebula.gases.GasVolume;
 import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.screen.CondenserScreenHandler;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import org.apache.logging.log4j.LogManager;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -24,16 +20,17 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class CondenserBlockEntity extends LockableContainerBlockEntity {
-    private final DefaultedList<ItemStack> items = DefaultedList.ofSize(1,ItemStack.EMPTY);
+    private final DefaultedList<ItemStack> items = DefaultedList.ofSize(1, ItemStack.EMPTY);
     public List<CondenserScreenHandler> handlers = new ArrayList<>();
     private List<GasVolume> gases = new ArrayList<>();
+
     public CondenserBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(NebulaBlocks.CONDENSER_BLOCK_ENTITY,blockPos,blockState);
+        super(NebulaBlocks.CONDENSER_BLOCK_ENTITY, blockPos, blockState);
     }
 
     @Override
@@ -42,7 +39,7 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity {
         Inventories.readNbt(compoundTag, this.items);
         NbtList gasesTag = compoundTag.getList("gases", 10);
         this.gases = new ArrayList<>();
-        for(int i = 0; i < gasesTag.size(); ++i) {
+        for (int i = 0; i < gasesTag.size(); ++i) {
             //this.gases.add(FluidVolume.fromTag(compoundTag));
         }
     }
@@ -52,20 +49,13 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity {
         super.writeNbt(compoundTag);
         Inventories.writeNbt(compoundTag, this.items);
         NbtList gasesTag = new NbtList();
-        for(GasVolume gas : gases) {
+        for (GasVolume gas : gases) {
             NbtCompound gasTag = new NbtCompound();
             gas.toTag(compoundTag);
             gasesTag.add(gasTag);
-            //gasesTag.addTag(gasesTag.size(), gasTag);
         }
         compoundTag.put("gases", gasesTag);
         return compoundTag;
-    }
-
-
-    public void onOpen(PlayerEntity player,CondenserBlockEntity be) {
-        super.onOpen(player);
-
     }
 
     public List<GasVolume> getGases() {
@@ -80,9 +70,9 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity {
     @Override
     public ScreenHandler createMenu(int syncID, PlayerInventory inventory, PlayerEntity player) {
         //this.gases.clear();
-        gases.add(new GasVolume(NebulaGases.NITROGEN,40));
+        gases.add(new GasVolume(NebulaGases.NITROGEN, 40));
         gases.add(new GasVolume(NebulaGases.OXYGEN, 12));
-        CondenserScreenHandler handler = new CondenserScreenHandler(syncID,inventory,this);
+        CondenserScreenHandler handler = new CondenserScreenHandler(syncID, inventory, this);
         handlers.add(handler);
         return handler;
     }
@@ -90,8 +80,8 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity {
     @Override
     protected ScreenHandler createScreenHandler(int syncID, PlayerInventory inventory) {
         //gases.add(FluidKeys.get(NebulaGases.NITROGEN).withAmount(100));
-        gases.add(new GasVolume(NebulaGases.NITROGEN,40));
-        CondenserScreenHandler handler = new CondenserScreenHandler(syncID,inventory,this);
+        gases.add(new GasVolume(NebulaGases.NITROGEN, 40));
+        CondenserScreenHandler handler = new CondenserScreenHandler(syncID, inventory, this);
         handlers.add(handler);
         return handler;
     }
@@ -111,8 +101,8 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity {
                 return true;
             }
 
-            itemStack = (ItemStack)var1.next();
-        } while(itemStack.isEmpty());
+            itemStack = (ItemStack) var1.next();
+        } while (itemStack.isEmpty());
 
         return false;
     }
@@ -133,7 +123,7 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity {
 
     @Override
     public ItemStack removeStack(int i) {
-        return Inventories.removeStack(items,i);
+        return Inventories.removeStack(items, i);
     }
 
     @Override
@@ -143,7 +133,7 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity {
 
     @Override
     public boolean canPlayerUse(PlayerEntity player) {
-        return player.inventory.canPlayerUse(player);
+        return player.getInventory().canPlayerUse(player);
     }
 
     @Override
@@ -152,10 +142,12 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity {
     }
 
 
+    public static void tick(World world, BlockPos pos, BlockState state, CondenserBlockEntity blockEntity) {
 
-    @Override
-    public void tick() {
-        for(CondenserScreenHandler handle : handlers) {
+    }
+
+    public static <T extends BlockEntity> void tick(World world, BlockPos blockPos, BlockState blockState, T blockEntity) {
+        for (CondenserScreenHandler handle : ((CondenserBlockEntity) blockEntity).handlers) {
             handle.tick();
         }
     }

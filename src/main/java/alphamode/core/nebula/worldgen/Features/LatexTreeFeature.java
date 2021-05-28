@@ -7,17 +7,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.util.FeatureContext;
 
 public class LatexTreeFeature extends Feature<LatexConfig> {
 
-    public LatexTreeFeature(Codec<LatexConfig> codec) {
-        super(codec);
+
+    public LatexTreeFeature(Codec<LatexConfig> configCodec) {
+        super(configCodec);
     }
 
     @Override
-    public boolean generate(StructureWorldAccess world, ChunkGenerator chunkGenerator, Random random, BlockPos pos, LatexConfig config) {
-
+    public boolean generate(FeatureContext<LatexConfig> context) {
         return false;
     }
+
 
 }

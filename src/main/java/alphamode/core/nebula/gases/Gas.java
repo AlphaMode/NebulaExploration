@@ -1,6 +1,5 @@
 package alphamode.core.nebula.gases;
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alphamode.core.nebula.NebulaRegistry;
 import org.jetbrains.annotations.Nullable;
 import java.awt.*;

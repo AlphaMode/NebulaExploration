@@ -5,11 +5,9 @@ import alphamode.core.nebula.dimensions.NebulaDimensions;
 import alphamode.core.nebula.fluids.NebulaFluids;
 import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.items.NebulaItems;
-import alphamode.core.nebula.rei.NebulaPlugin;
 import alphamode.core.nebula.screen.NebulaScreens;
 import alphamode.core.nebula.util.Util;
 import alphamode.core.nebula.worldgen.Features.NebulaFeatures;
-import me.shedaniel.rei.RoughlyEnoughItemsCore;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
@@ -52,7 +50,7 @@ public class NebulaMod implements ModInitializer {
         NebulaDimensions.init();
         if(FabricLoader.getInstance().isModLoaded("roughlyenoughitems")) {
             LOGGER.info("Loading REI plugin.");
-            RoughlyEnoughItemsCore.registerPlugin(new NebulaPlugin());
+            //RoughlyEnoughItemsCore.registerPlugin(new NebulaPlugin());
         }
     }
 }

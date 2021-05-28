@@ -1,12 +1,7 @@
 package alphamode.core.nebula.gases;
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.mixin.impl.FluidBlockMixin;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.lib.attributes.fluid.volume.SimpleFluidKey;
-import alexiil.mc.lib.attributes.fluid.volume.SimpleFluidVolume;
 import alphamode.core.nebula.NebulaRegistry;
+
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
@@ -14,12 +9,12 @@ public final class GasVolume  {
 
     private Gas owner;
     private int gasAmount;
-    private SimpleFluidKey key;
+    //private SimpleFluidKey key;
 
     public GasVolume(Gas gas, int gasAmount) {
         this.owner = gas;
         this.gasAmount = gasAmount;
-        key = new SimpleFluidKey(new FluidKey.FluidKeyBuilder(NebulaRegistry.GAS.getId(gas)).setGas().setRenderColor(gas.getColor()).setName(gas.getName()));
+        //key = new SimpleFluidKey(new FluidKey.FluidKeyBuilder(NebulaRegistry.GAS.getId(gas)).setGas().setRenderColor(gas.getColor()).setName(gas.getName()));
     }
 
     public Gas getGas() {
@@ -44,8 +39,8 @@ public final class GasVolume  {
         return tag;
     }
 
-    public FluidVolume toFluidVolume() {
-        return key.withAmount(FluidAmount.of(gasAmount,1000));
+    public GasVolume toFluidVolume() {
+        return this;
     }
 
 }

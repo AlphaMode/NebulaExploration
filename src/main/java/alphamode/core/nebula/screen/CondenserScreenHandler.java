@@ -5,6 +5,8 @@ import alphamode.core.nebula.packet.GasTankS2CPacket;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -12,9 +14,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class CondenserScreenHandler extends ScreenHandler {
     private ServerPlayerEntity playerEntity;
-    private CondenserBlockEntity inventory;
+    private Inventory inventory;
 
-    public CondenserScreenHandler(int syncId, PlayerInventory playerInventory, CondenserBlockEntity inventory) {
+    public CondenserScreenHandler(int syncId,PlayerInventory inventory) {
+        this(syncId,inventory,new SimpleInventory(1));
+    }
+
+    public CondenserScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(NebulaScreens.CONDENSER_MENU,syncId);
         checkSize(inventory, 1);
         this.inventory = inventory;
@@ -36,22 +42,18 @@ public class CondenserScreenHandler extends ScreenHandler {
         }
     }
 
-    public CondenserScreenHandler(int i, PlayerInventory playerInventory) {
-        this(i,playerInventory,new CondenserBlockEntity());
-        //super(NebulaScreens.CONDENSER_MENU,i);
-    }
-
     public void tick() {
-        playerEntity.networkHandler.sendPacket(GasTankS2CPacket.create(inventory.getGases()));
+        playerEntity.networkHandler.sendPacket(GasTankS2CPacket.create(((CondenserBlockEntity)inventory).getGases()));
     }
 
     @Override
     public void close(PlayerEntity player) {
         super.close(player);
-        inventory.handlers.remove(this);
+        if(playerEntity instanceof ServerPlayerEntity)
+            ((CondenserBlockEntity)inventory).handlers.remove(this);
     }
 
-    public CondenserBlockEntity getInventory() {
+    public Inventory getInventory() {
         return inventory;
     }
 
