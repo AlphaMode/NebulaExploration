@@ -14,24 +14,24 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
-repositories {
-    maven {
-        url = "https://maven.shedaniel.me/"
-        allowInsecureProtocol(true)
-    }
-    maven {
-        name = "BuildCraft"
-        url = "https://mod-buildcraft.com/maven"
-        allowInsecureProtocol(true)
-    }
-    maven {
-        name = 'Ladysnake Mods'
-        url = 'https://ladysnake.jfrog.io/artifactory/mods'
-        allowInsecureProtocol(true)
-    }
-}
 
 dependencies {
+    repositories {
+        maven {
+            url = "https://maven.shedaniel.me/"
+            allowInsecureProtocol(true)
+        }
+        maven {
+            name = "BuildCraft"
+            url = "https://mod-buildcraft.com/maven"
+            allowInsecureProtocol(true)
+        }
+        maven {
+            name = 'Ladysnake Mods'
+            url = 'https://ladysnake.jfrog.io/artifactory/mods'
+            allowInsecureProtocol(true)
+        }
+    }
     minecraft "com.mojang:minecraft:1.16.5"
     mappings "net.fabricmc:yarn:1.16.5+build.9:v2"
     modImplementation "net.fabricmc:fabric-loader:0.11.3"
