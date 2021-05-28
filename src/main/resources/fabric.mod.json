@@ -17,6 +17,9 @@
     ],
     "main": [
       "alphamode.core.nebula.NebulaMod"
+    ],
+    "rei_plugins": [
+      "alphamode.core.nebula.rei.NebulaPlugin"
     ]
   },
   "mixins": [

@@ -16,16 +16,13 @@ group = project.maven_group
 
 repositories {
     maven {
-        allowInsecureProtocol = true
         url = "https://maven.shedaniel.me/"
     }
     maven {
         name = "BuildCraft"
-        allowInsecureProtocol = true
         url = "https://mod-buildcraft.com/maven"
     }
     maven {
-        allowInsecureProtocol = true
         name = 'Ladysnake Mods'
         url = 'https://ladysnake.jfrog.io/artifactory/mods'
     }
@@ -38,11 +35,10 @@ dependencies {
 
     //Fabric api
     modImplementation "net.fabricmc.fabric-api:fabric-api:0.34.6+1.16"
-    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:5.8.9"
-    modImplementation("me.shedaniel:RoughlyEnoughItems:5.11.202")
+    modApi("me.shedaniel:RoughlyEnoughItems:5.11.202")
     modApi "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:2.8.3"
     modApi "alexiil.mc.lib:libblockattributes-fluids:0.8.4"
-    modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:2.8.3"
+    modApi "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:2.8.3"
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
 }
