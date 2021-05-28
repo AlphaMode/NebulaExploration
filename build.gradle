@@ -39,23 +39,18 @@ dependencies {
     modImplementation("me.shedaniel:RoughlyEnoughItems:5.11.202")
     modApi "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:2.8.3"
     modApi "alexiil.mc.lib:libblockattributes-fluids:0.8.4"
-
+    modApi 'teamreborn:energy:0.1.2'
+    include 'teamreborn:energy:0.1.2'
     modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:2.8.3"
-    // Includes Cardinal Components API as a Jar-in-Jar dependency (optional)
-    include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:2.8.3"
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
 }
 
 processResources {
     inputs.property "version", project.version
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
-        expand "version": project.version
-    }
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
     }
 }
 

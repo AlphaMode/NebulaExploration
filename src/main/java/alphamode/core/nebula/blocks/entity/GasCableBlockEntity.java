@@ -1,6 +1,6 @@
 package alphamode.core.nebula.blocks.entity;
 
-import alphamode.core.nebula.blocks.ICable;
+import alphamode.core.nebula.api.blocks.ICable;
 import alphamode.core.nebula.blocks.NebulaBlocks;
 import alphamode.core.nebula.gases.GasVolume;
 
