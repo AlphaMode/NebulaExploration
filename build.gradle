@@ -16,18 +16,18 @@ group = project.maven_group
 
 repositories {
     maven {
-        url = "http://maven.shedaniel.me/"
-        allowInsecureProtocol(true)
+        allowInsecureProtocol = true
+        url = "https://maven.shedaniel.me/"
     }
     maven {
         name = "BuildCraft"
-        url = "http://mod-buildcraft.com/maven"
-        allowInsecureProtocol(true)
+        allowInsecureProtocol = true
+        url = "https://mod-buildcraft.com/maven"
     }
     maven {
+        allowInsecureProtocol = true
         name = 'Ladysnake Mods'
-        url = 'http://ladysnake.jfrog.io/artifactory/mods'
-        allowInsecureProtocol(true)
+        url = 'https://ladysnake.jfrog.io/artifactory/mods'
     }
 }
 
