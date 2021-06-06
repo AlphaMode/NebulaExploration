@@ -1,5 +1,6 @@
 package alphamode.core.nebula.blocks.entity;
 
+import alphamode.core.nebula.api.Machine;
 import alphamode.core.nebula.blocks.NebulaBlocks;
 import alphamode.core.nebula.gases.GasVolume;
 import alphamode.core.nebula.gases.NebulaGases;
@@ -24,7 +25,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class CondenserBlockEntity extends LockableContainerBlockEntity {
+public class CondenserBlockEntity extends LockableContainerBlockEntity implements Machine<GasVolume> {
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(1, ItemStack.EMPTY);
     public List<CondenserScreenHandler> handlers = new ArrayList<>();
     private List<GasVolume> gases = new ArrayList<>();
@@ -150,5 +151,10 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity {
         for (CondenserScreenHandler handle : ((CondenserBlockEntity) blockEntity).handlers) {
             handle.tick();
         }
+    }
+
+    @Override
+    public GasVolume getInventory() {
+        return null;
     }
 }

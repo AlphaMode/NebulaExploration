@@ -9,6 +9,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import static alphamode.core.nebula.NebulaMod.id;
+import alphamode.core.nebula.lib.client.GuiUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         List<Gas> gases = new ArrayList<>();
         for (Map.Entry<Gas, Integer> cursed : Util.getAtmosphereGas(client.player).entrySet()) {
             //gases.add(new GasVolume(cursed.getKey(), cursed.getValue()).toFluidVolume());
-            setColorRGBA(cursed.getKey().getColor());
+            GuiUtil.setColorRGBA(cursed.getKey().getColor());
             //oa =+ calcGasHeight(cursed.getValue(),oa);
 
 
@@ -56,8 +57,8 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         //Tank Gases
         int boffset = 67;
         for (GasVolume gas : tank) {
-            setColorRGBA(gas.getGas().getColor());
-            renderTiledTextureAtlas(matrixStack, this, sprites[0], 39, boffset - gas.getAmount(), 20, gas.getAmount(), 100, false);
+            GuiUtil.setColorRGBA(gas.getGas().getColor());
+            GuiUtil.renderTiledTextureAtlas(matrixStack, this, sprites[0], 39, boffset - gas.getAmount(), 20, gas.getAmount(), 100, false);
         }
     }
 
@@ -90,31 +91,6 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
 
     }
 
-    public static void setColorRGBA(int color) {
-        float a = alpha(color) / 255.0F;
-        float r = red(color) / 255.0F;
-        float g = green(color) / 255.0F;
-        float b = blue(color) / 255.0F;
-        RenderSystem.setShaderColor(r, g, b, a);
-    }
-
-    public static int alpha(int c) {
-        return (c >> 24) & 0xFF;
-    }
-
-    public static int red(int c) {
-        return (c >> 16) & 0xFF;
-    }
-
-    public static int green(int c) {
-        return (c >> 8) & 0xFF;
-    }
-
-    public static int blue(int c) {
-        return (c) & 0xFF;
-    }
-
-
     public CondenserHandledScreen(CondenserScreenHandler abstractContainerMenu, PlayerInventory inventory, Text component) {
         super(abstractContainerMenu, inventory, component);
         tank = new ArrayList<>();
@@ -134,64 +110,6 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         drawTexture(matrixStack, ax + 39, ay + 16, 0, 166, 20, 59);
         drawTexture(matrixStack, ax, ay, 0, 0, backgroundWidth, backgroundHeight);
         RenderSystem.enableDepthTest();
-    }
-
-    //Cursed tinker's method
-    private static void renderTiledTextureAtlas(MatrixStack matrices, HandledScreen<?> screen, Sprite sprite, int x, int y, int width, int height, int depth, boolean upsideDown) {
-        // start drawing sprites
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
-        //screen.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-        BufferBuilder builder = Tessellator.getInstance().getBuffer();
-        builder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-
-        // tile vertically
-        float u1 = sprite.getMinU();
-        float v1 = sprite.getMinV();
-        int spriteHeight = sprite.getHeight();
-        int spriteWidth = sprite.getWidth();
-        int startX = x + screen.x;
-        int startY = y + screen.y;
-        do {
-
-            int renderHeight = Math.min(spriteHeight, height);
-            height -= renderHeight;
-            float v2 = sprite.getFrameV((16f * renderHeight) / spriteHeight);
-
-            // we need to draw the quads per width too
-            int x2 = startX;
-            int widthLeft = width;
-            Matrix4f matrix = matrices.peek().getModel();
-            // tile horizontally
-            do {
-                int renderWidth = Math.min(spriteWidth, widthLeft);
-                widthLeft -= renderWidth;
-
-                float u2 = sprite.getFrameU((16f * renderWidth) / spriteWidth);
-                if (upsideDown) {
-                    // FIXME: I think this causes tiling errors, look into it
-                    buildSquare(matrix, builder, x2, x2 + renderWidth, startY, startY + renderHeight, depth, u1, u2, v2, v1);
-                } else {
-                    buildSquare(matrix, builder, x2, x2 + renderWidth, startY, startY + renderHeight, depth, u1, u2, v1, v2);
-                }
-                x2 += renderWidth;
-            } while (widthLeft > 0);
-
-            startY += renderHeight;
-        } while (height > 0);
-
-        // finish drawing sprites
-        builder.end();
-        //RenderSystem
-        //RenderSystem.enableAlphaTest();
-        BufferRenderer.draw(builder);
-    }
-
-    private static void buildSquare(Matrix4f matrix, BufferBuilder builder, int x1, int x2, int y1, int y2, int z, float u1, float u2, float v1, float v2) {
-        builder.vertex(matrix, x1, y2, z).texture(u1, v2).next();
-        builder.vertex(matrix, x2, y2, z).texture(u2, v2).next();
-        builder.vertex(matrix, x2, y1, z).texture(u2, v1).next();
-        builder.vertex(matrix, x1, y1, z).texture(u1, v1).next();
     }
 
     @Override

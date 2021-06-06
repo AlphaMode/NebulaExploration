@@ -2,16 +2,15 @@ package alphamode.core.nebula.blocks;
 
 import alphamode.core.nebula.blocks.entity.CondenserBlockEntity;
 import alphamode.core.nebula.blocks.entity.GasCableBlockEntity;
-import alphamode.core.nebula.gases.NebulaGases;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
+import static alphamode.core.nebula.NebulaMod.id;
 
-import net.minecraft.block.*;
+import net.minecraft.block.Material;
+import net.minecraft.block.OreBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.registry.Registry;
-
-import static alphamode.core.nebula.NebulaMod.id;
 
 public class NebulaBlocks {
 
