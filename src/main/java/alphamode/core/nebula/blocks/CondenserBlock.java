@@ -4,6 +4,7 @@ import alphamode.core.nebula.blocks.entity.CondenserBlockEntity;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
@@ -50,6 +51,11 @@ public class CondenserBlock extends BlockWithEntity  {
             }
             super.onStateReplaced(blockState, level, pos, newState, bl);
         }
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
 
