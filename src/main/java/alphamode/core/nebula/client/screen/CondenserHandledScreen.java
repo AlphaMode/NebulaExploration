@@ -10,10 +10,7 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import static alphamode.core.nebula.NebulaMod.id;
 import alphamode.core.nebula.lib.client.GuiUtil;
 
-import java.util.*;
-
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -25,7 +22,9 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.SimplePairList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler> {
     private static final Identifier TEXTURE = id("textures/gui/condenser.png");
@@ -119,7 +118,7 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
     private void renderGasTooltip(MatrixStack matrixStack, int x, int y, GasVolume gas) {
         List<Text> tooltip = new ArrayList<>();
         tooltip.add(gas.getGas().getName());
-        tooltip.add(new TranslatableText("gui.nebula.concentration").append(": " + gas.getAmount() + " mB/tick").formatted(Formatting.GRAY));
+        tooltip.add(new TranslatableText("gui.nebula.concentration", gas.getAmount()).formatted(Formatting.GRAY));
         tooltip.add(new LiteralText(NebulaMod.MOD_ID).formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
         renderTooltip(matrixStack, tooltip, x, y);
 
