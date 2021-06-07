@@ -1,9 +1,12 @@
 package alphamode.core.nebula.dimensions;
 
 import alphamode.core.nebula.NebulaRegistry;
+import alphamode.core.nebula.gases.GasVolume;
 import alphamode.core.nebula.gases.NebulaGases;
 import com.google.common.collect.ImmutableMap;
 import static alphamode.core.nebula.NebulaMod.id;
+
+import java.util.List;
 
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.dimension.DimensionType;
@@ -18,9 +21,9 @@ public class NebulaDimensions {
     }
 
     static {
-        SPACE = Registry.register(NebulaRegistry.ATMOSPHERE, id("space"), new Atmosphere(id("space"), ImmutableMap.of(NebulaGases.EMPTY,0)));
-        OUTTER_SPACE = Registry.register(NebulaRegistry.ATMOSPHERE, id("outter_space"), new Atmosphere(id("outter_space"), ImmutableMap.of(NebulaGases.NITROGEN, 100)));
-        EARTH_ATMOSPHERE = Registry.register(NebulaRegistry.ATMOSPHERE, id("earth"),new Atmosphere(DimensionType.OVERWORLD_ID, ImmutableMap.of(NebulaGases.OXYGEN,1001,NebulaGases.NITROGEN,3027)));
+        SPACE = Registry.register(NebulaRegistry.ATMOSPHERE, id("space"), new Atmosphere(id("space"), List.of(new GasVolume(NebulaGases.EMPTY,0))));
+        OUTTER_SPACE = Registry.register(NebulaRegistry.ATMOSPHERE, id("outter_space"), new Atmosphere(id("outter_space"), List.of(new GasVolume(NebulaGases.NITROGEN, 100))));
+        EARTH_ATMOSPHERE = Registry.register(NebulaRegistry.ATMOSPHERE, id("earth"),new Atmosphere(DimensionType.OVERWORLD_ID, List.of(new GasVolume(NebulaGases.OXYGEN,1001),new GasVolume(NebulaGases.NITROGEN,3027))));
     }
 
 }

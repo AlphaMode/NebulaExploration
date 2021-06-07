@@ -98,6 +98,7 @@ public class BasicGasCable extends BlockWithEntity {
     @SuppressWarnings("deprecation")
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        NebulaMod.LOGGER.info("testfdsgsg");
         if (state.hasBlockEntity()) {
             if (world.getBlockEntity(pos) instanceof GasCableBlockEntity) {
                 GasCableBlockEntity blockEntity = (GasCableBlockEntity) world.getBlockEntity(pos);

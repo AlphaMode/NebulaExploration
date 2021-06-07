@@ -3,6 +3,7 @@ package alphamode.core.nebula.util;
 import alphamode.core.nebula.NebulaRegistry;
 import alphamode.core.nebula.dimensions.NebulaDimensions;
 import alphamode.core.nebula.gases.Gas;
+import alphamode.core.nebula.gases.GasVolume;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -38,14 +39,14 @@ public class Util {
         return components;
     }
 
-    public static Map<Gas, Integer> getAtmosphereGas(PlayerEntity playerEntity) {
+    public static List<GasVolume> getAtmosphereGas(PlayerEntity playerEntity) {
         for(Identifier id: NebulaRegistry.ATMOSPHERE.getIds()) {
             if(NebulaRegistry.ATMOSPHERE.get(id).getDimension().equals(playerEntity.world.getRegistryKey().getValue())) {
-                return NebulaRegistry.ATMOSPHERE.get(id).getAstmospherGases();
+                return NebulaRegistry.ATMOSPHERE.get(id).getAstmosphereGases();
             }
         }
         //playerEntity.world.getRegistryKey().getValue().equals(NebulaRegistry.ATMOSPHERE.));
-        return NebulaDimensions.SPACE.getAstmospherGases();
+        return NebulaDimensions.SPACE.getAstmosphereGases();
     }
 
     public static int clamp(int value, int min, int max) {

@@ -45,13 +45,13 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         int aoffset = 67;
         int oa = 0;
         List<Gas> gases = new ArrayList<>();
-        for (Map.Entry<Gas, Integer> cursed : Util.getAtmosphereGas(client.player).entrySet()) {
+        for (GasVolume cursed : Util.getAtmosphereGas(client.player)) {
             //gases.add(new GasVolume(cursed.getKey(), cursed.getValue()).toFluidVolume());
-            GuiUtil.setColorRGBA(cursed.getKey().getColor());
+            GuiUtil.setColorRGBA(cursed.getGas().getColor());
             //oa =+ calcGasHeight(cursed.getValue(),oa);
 
 
-            aoffset -= cursed.getValue();
+            aoffset -= cursed.getAmount();
         }
 
         //Tank Gases
@@ -68,25 +68,25 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
 
     private void renderAtmosphericGasTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
         int offset = 67;
-        for (Map.Entry<Gas, Integer> cursed : Util.getAtmosphereGas(client.player).entrySet()) {
+        for (GasVolume cursed : Util.getAtmosphereGas(client.player)) {
             int checkX = mouseX - this.x;
             int checkY = mouseY - this.y;
 
             List<Text> UwU = new ArrayList<>();
 
             renderTooltip(matrixStack, UwU, mouseX, mouseY);
-            int temp = Util.clamp(cursed.getValue(), 0, 52);
+            int temp = Util.clamp(cursed.getAmount(), 0, 52);
 
             if (checkX >= 11 && checkY >= offset - temp && checkX < 11 + 20 && checkY < offset - temp + temp) {
                 List<Text> tooltip = new ArrayList<>();
 
-                tooltip.add(cursed.getKey().getName());
+                tooltip.add(cursed.getGas().getName());
 
-                tooltip.add(new TranslatableText("gui.nebula.concentration").append(": " + Util.getAtmosphereGas(client.player).get(cursed.getKey()) + " mB/tick").formatted(Formatting.GRAY));
+                tooltip.add(new TranslatableText("gui.nebula.concentration").append(": " + Util.getAtmosphereGas(client.player).get(0).getAmount() + " mB/tick").formatted(Formatting.GRAY));
                 Util.appendModIdToTooltips(tooltip, NebulaMod.MOD_ID);
                 renderTooltip(matrixStack, tooltip, mouseX, mouseY);
             }
-            offset -= cursed.getValue();
+            offset -= cursed.getAmount();
         }
 
     }

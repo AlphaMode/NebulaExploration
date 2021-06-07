@@ -12,9 +12,9 @@ import net.minecraft.util.Identifier;
 //Wrapper for fluidvolume
 public final class GasVolume  {
 
-    private Gas owner;
+    private final Gas owner;
     private long gasAmount;
-    private SimpleFluidKey key;
+    private final SimpleFluidKey key;
 
     public GasVolume(Gas gas, long gasAmount) {
         this.owner = gas;
@@ -50,5 +50,6 @@ public final class GasVolume  {
     }
 
     public void setAmount(long l) {
+        gasAmount = l;
     }
 }
