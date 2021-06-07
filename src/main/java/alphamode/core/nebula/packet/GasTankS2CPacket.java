@@ -1,17 +1,15 @@
 package alphamode.core.nebula.packet;
 
-import alphamode.core.nebula.NebulaMod;
+
 import alphamode.core.nebula.client.screen.CondenserHandledScreen;
 import alphamode.core.nebula.gases.GasVolume;
-import alphamode.core.nebula.screen.CondenserScreenHandler;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import static alphamode.core.nebula.NebulaMod.id;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import net.minecraft.client.MinecraftClient;
@@ -20,7 +18,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 
 public class GasTankS2CPacket {
@@ -33,6 +30,8 @@ public class GasTankS2CPacket {
         for(int i = 0; i<gasesList.size();i++) {
             gases.add(GasVolume.fromTag(gasesList.getCompound(i)));
         }
+
+        gases.sort( (a,b) -> b.getAmount() - a.getAmount() );
 
         client.execute(() -> {
             if(client.currentScreen instanceof CondenserHandledScreen) {
