@@ -9,6 +9,7 @@
   "itemGroup.nebula.space_machines": "Space Machines",
   "gui.condenser.name": "Gas Condenser",
   "gui.nebula.concentration": "Gas Concentration",
+  "gas.nebula.empty": "Empty",
   "gas.nebula.oxygen": "Oxygen",
   "gas.nebula.nitrogen": "Nitrogen"
 }

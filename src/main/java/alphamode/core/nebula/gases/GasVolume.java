@@ -8,9 +8,10 @@ import alphamode.core.nebula.NebulaRegistry;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 //Wrapper for fluidvolume
-public final class GasVolume  {
+public final class GasVolume {
 
     private final Gas owner;
     private long gasAmount;
@@ -52,4 +53,5 @@ public final class GasVolume  {
     public void setAmount(long l) {
         gasAmount = l;
     }
+
 }
