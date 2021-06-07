@@ -9,7 +9,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,13 +30,15 @@ public class Util {
     public static String getModFromModId(String modid) {
         if (modid == null)
             return "";
-        String s = FabricLoader.getInstance().getModContainer(modid).map(ModContainer::getMetadata).map(ModMetadata::getName).orElse(modid);
-        return s;
+        return FabricLoader.getInstance().getModContainer(modid).map(ModContainer::getMetadata).map(ModMetadata::getName).orElse(modid);
     }
 
-    public static List<Text> appendModIdToTooltips(List<Text> components, String modId) {
-        components.add(new LiteralText(getModFromModId(modId)).formatted(Formatting.BLUE,Formatting.ITALIC));
-        return components;
+    public static Text modToolTip(String modId) {
+        return new LiteralText(getModFromModId(modId)).formatted(Formatting.BLUE,Formatting.ITALIC);
+    }
+
+    public static Text gasModToolTip(Gas gas) {
+        return Util.modToolTip(NebulaRegistry.GAS.getId(gas).getNamespace());
     }
 
     public static List<GasVolume> getAtmosphereGas(PlayerEntity playerEntity) {

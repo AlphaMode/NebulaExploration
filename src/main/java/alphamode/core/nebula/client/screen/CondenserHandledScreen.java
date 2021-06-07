@@ -1,6 +1,7 @@
 package alphamode.core.nebula.client.screen;
 
 import alphamode.core.nebula.NebulaMod;
+import alphamode.core.nebula.NebulaRegistry;
 import alphamode.core.nebula.gases.GasVolume;
 import alphamode.core.nebula.screen.CondenserScreenHandler;
 import alphamode.core.nebula.util.Util;
@@ -119,7 +120,7 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         List<Text> tooltip = new ArrayList<>();
         tooltip.add(gas.getGas().getName());
         tooltip.add(new TranslatableText("gui.nebula.concentration", gas.getAmount()).formatted(Formatting.GRAY));
-        tooltip.add(new LiteralText(NebulaMod.MOD_ID).formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
+        tooltip.add( Util.gasModToolTip( gas.getGas() ) );
         renderTooltip(matrixStack, tooltip, x, y);
 
     }

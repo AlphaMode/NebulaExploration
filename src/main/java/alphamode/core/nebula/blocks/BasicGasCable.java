@@ -1,6 +1,5 @@
 package alphamode.core.nebula.blocks;
 
-import alphamode.core.nebula.NebulaMod;
 import alphamode.core.nebula.api.Machine;
 import alphamode.core.nebula.api.Node;
 import alphamode.core.nebula.blocks.entity.GasCableBlockEntity;
@@ -66,29 +65,6 @@ public class BasicGasCable extends BlockWithEntity {
             case EAST -> Properties.EAST;
             case WEST -> Properties.WEST;
         };
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        super.onStateReplaced(state, world, pos, newState, moved);
-//        if (state.hasBlockEntity() && !state.isOf(newState.getBlock())) {
-////            if(world.getBlockEntity(pos) instanceof GasCableBlockEntity) {
-//            GasCableBlockEntity blockEntity = (GasCableBlockEntity) world.getBlockEntity(pos);
-//            for (Direction dir : Direction.values()) {
-//                BlockEntity blockEntity1 = world.getBlockEntity(pos.offset(dir));
-//                if (blockEntity1 instanceof Node) {
-//                    world.setBlockState(blockEntity1.getPos(), world.getBlockState(blockEntity1.getPos()).with(getFacing(dir.getOpposite()), false));
-//                }
-//            }
-//            blockEntity.setNodeProvider(null);
-//            if (blockEntity.getNetwork() != null) {
-//                blockEntity.getNetwork().removeNode(blockEntity);
-//            }
-////            }
-//            NebulaMod.LOGGER.info("destroyed");
-//            world.removeBlockEntity(pos);
-//        }
     }
 
     @Override
