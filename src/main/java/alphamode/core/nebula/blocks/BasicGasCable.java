@@ -29,6 +29,8 @@ public class BasicGasCable extends BlockWithEntity {
     private static final VoxelShape N_DOWN = Block.createCuboidShape(5.5, 0, 5.5, 10.5, 5.5, 10.5);
     private static final VoxelShape N_NORTH = Block.createCuboidShape(5.5, 5.5, 0, 10.5, 10.5, 5.5);
     private static final VoxelShape N_SOUTH = Block.createCuboidShape(5.5, 5.5, 5.5, 10.5, 10.5, 16);
+    private static final VoxelShape N_EAST = Block.createCuboidShape(5.5, 5.5, 5.5, 16, 10.5, 10.5);
+    private static final VoxelShape N_WEST = Block.createCuboidShape(0, 5.5, 5.5, 10.5, 10.5, 10.5);
 
     protected BasicGasCable(Settings settings) {
         super(settings);
@@ -127,6 +129,10 @@ public class BasicGasCable extends BlockWithEntity {
             nodeShape = VoxelShapes.combineAndSimplify(nodeShape, N_NORTH, BooleanBiFunction.OR);
         if(state.get(Properties.SOUTH))
             nodeShape = VoxelShapes.combineAndSimplify(nodeShape, N_SOUTH, BooleanBiFunction.OR);
+        if(state.get(Properties.EAST))
+            nodeShape = VoxelShapes.combineAndSimplify(nodeShape, N_EAST, BooleanBiFunction.OR);
+        if(state.get(Properties.WEST))
+            nodeShape = VoxelShapes.combineAndSimplify(nodeShape, N_WEST, BooleanBiFunction.OR);
         return nodeShape;
     }
 }
