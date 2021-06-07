@@ -16,6 +16,7 @@ import java.util.Map;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.*;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -44,22 +45,27 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         //Atmosphere gases
         int aoffset = 67;
         int oa = 0;
-        List<Gas> gases = new ArrayList<>();
-        for (GasVolume cursed : Util.getAtmosphereGas(client.player)) {
-            //gases.add(new GasVolume(cursed.getKey(), cursed.getValue()).toFluidVolume());
-            GuiUtil.setColorRGBA(cursed.getGas().getColor());
-            //oa =+ calcGasHeight(cursed.getValue(),oa);
 
+        List<GasVolume> gasses = Util.getAtmosphereGas(client.player);
+        int numGasses = gasses.size();
+        double sumVolume = gasses.stream().mapToInt(GasVolume::getAmount).sum();
+        int pixelsAvailable = 52 - numGasses*2;
 
-            aoffset -= cursed.getAmount();
-        }
+        for (GasVolume gas : Util.getAtmosphereGas(client.player)) {
+            int pixels = (int) Math.floor(gas.getAmount() / sumVolume * pixelsAvailable) + 2;
 
-        //Tank Gases
-        int boffset = 67;
-        for (GasVolume gas : tank) {
+            //TODO: render tooltips here
+
             GuiUtil.setColorRGBA(gas.getGas().getColor());
-            GuiUtil.renderTiledTextureAtlas(matrixStack, this, sprites[0], 39, boffset - gas.getAmount(), 20, gas.getAmount(), 100, false);
+            GuiUtil.renderTiledTextureAtlas(matrixStack, this, sprites[0], 11, aoffset - oa - pixels, 20, pixels, 100, true);
+            oa += pixels;
         }
+//        //Tank Gases
+//        int boffset = 67;
+//        for (GasVolume gas : tank) {
+//            GuiUtil.setColorRGBA(gas.getGas().getColor());
+//            GuiUtil.renderTiledTextureAtlas(matrixStack, this, sprites[0], 39, boffset - gas.getAmount(), 20, gas.getAmount(), 100, false);
+//        }
     }
 
     private void renderTankTooltip(MatrixStack matrixStack, int x, int y) {
@@ -101,10 +107,10 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
     protected void drawBackground(MatrixStack matrixStack, float delta, int x, int y) {
         int ax = (width - backgroundWidth) / 2;
         int ay = (height - backgroundHeight) / 2;
-        renderGases(matrixStack);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         //client.getTextureManager().bindTexture(TEXTURE);
         RenderSystem.setShaderTexture(0, TEXTURE);
+        renderGases(matrixStack);
         RenderSystem.disableDepthTest();
         drawTexture(matrixStack, ax + 11, ay + 16, 0, 166, 20, 59);
         drawTexture(matrixStack, ax + 39, ay + 16, 0, 166, 20, 59);
