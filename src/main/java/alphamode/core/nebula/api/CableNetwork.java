@@ -27,6 +27,20 @@ public class CableNetwork {
      * @param node Removes a node from the network
      */
     public void removeNode(Node node) {
+        if(node.isParent()) {
+            boolean parents = false;
+            for(Node node1 : nodes) {
+                if(node1.isParent()) {
+                    parents = true;
+                    break;
+                }
+            }
+            if (!parents) {
+                for(Node node1 : nodes) {
+                    node1.setNetwork(null);
+                }
+            }
+        }
         nodes.remove(node);
     }
 

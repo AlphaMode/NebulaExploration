@@ -24,11 +24,11 @@ import net.minecraft.world.WorldAccess;
 
 public class BasicGasCable extends BlockWithEntity {
 
-    private static final VoxelShape NODE = Block.createCuboidShape(5, 5, 5, 10, 10, 10);
-    private static final VoxelShape N_UP = Block.createCuboidShape(5.5, 5.5, 5.5, 9.5, 16, 9.5);
-    private static final VoxelShape N_DOWN = Block.createCuboidShape(5.5, 0, 5.5, 9.5, 5.5, 9.5);
-    private static final VoxelShape N_NORTH = Block.createCuboidShape(5.5, 5.5, 0, 9.5, 9.5, 5.5);
-    private static final VoxelShape N_SOUTH = Block.createCuboidShape(5.5, 5.5, 5.5, 9.5, 9.5, 16);
+    private static final VoxelShape NODE = Block.createCuboidShape(5, 5, 5, 11, 11, 11);
+    private static final VoxelShape N_UP = Block.createCuboidShape(5.5, 5.5, 5.5, 10.5, 16, 10.5);
+    private static final VoxelShape N_DOWN = Block.createCuboidShape(5.5, 0, 5.5, 10.5, 5.5, 10.5);
+    private static final VoxelShape N_NORTH = Block.createCuboidShape(5.5, 5.5, 0, 10.5, 10.5, 5.5);
+    private static final VoxelShape N_SOUTH = Block.createCuboidShape(5.5, 5.5, 5.5, 10.5, 10.5, 16);
 
     protected BasicGasCable(Settings settings) {
         super(settings);
@@ -66,14 +66,28 @@ public class BasicGasCable extends BlockWithEntity {
         };
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.hasBlockEntity() && !state.isOf(newState.getBlock())) {
+            if(world.getBlockEntity(pos) instanceof GasCableBlockEntity) {
+                GasCableBlockEntity blockEntity = (GasCableBlockEntity) world.getBlockEntity(pos);
+                blockEntity.setNodeProvider(null);
+                if(blockEntity.getNetwork() != null) {
+                    blockEntity.getNetwork().removeNode(blockEntity);
+                }
+            }
+            NebulaMod.LOGGER.info("destroyed");
+            world.removeBlockEntity(pos);
+        }
+    }
+
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockState state = getDefaultState();
         for (Direction dir : Direction.values()) {
             if (ctx.getWorld().getBlockEntity(ctx.getBlockPos().offset(dir)) instanceof Machine || ctx.getWorld().getBlockEntity(ctx.getBlockPos().offset(dir)) instanceof Node) {
-                BlockState neighbor = ctx.getWorld().getBlockState(ctx.getBlockPos().offset(dir));
                 state = state.with(getFacing(dir), true);
-                neighbor = neighbor.with(getFacing(dir.getOpposite()), true);
             }
         }
         return state;
@@ -82,6 +96,15 @@ public class BasicGasCable extends BlockWithEntity {
     @SuppressWarnings("deprecation")
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.hasBlockEntity()) {
+            if (world.getBlockEntity(pos) instanceof GasCableBlockEntity) {
+                GasCableBlockEntity blockEntity = (GasCableBlockEntity) world.getBlockEntity(pos);
+                blockEntity.setNodeProvider(null);
+                if (blockEntity.getNetwork() != null) {
+                    blockEntity.getNetwork().removeNode(blockEntity);
+                }
+            }
+        }
         if (world.getBlockEntity(neighborPos) instanceof Machine || world.getBlockEntity(neighborPos) instanceof Node)
             return state.with(getFacing(direction),true );
         return state;
@@ -89,7 +112,7 @@ public class BasicGasCable extends BlockWithEntity {
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return null;
+        return BlockRenderType.MODEL;
     }
 
     @SuppressWarnings("deprecation")
