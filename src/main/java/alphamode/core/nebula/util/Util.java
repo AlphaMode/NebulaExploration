@@ -17,6 +17,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 public class Util {
@@ -35,7 +36,7 @@ public class Util {
     }
 
     public static List<Text> appendModIdToTooltips(List<Text> components, String modId) {
-        components.add(new LiteralText(modId));
+        components.add(new LiteralText(getModFromModId(modId)).formatted(Formatting.BLUE,Formatting.ITALIC));
         return components;
     }
 
