@@ -71,17 +71,24 @@ public class BasicGasCable extends BlockWithEntity {
     @SuppressWarnings("deprecation")
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.hasBlockEntity() && !state.isOf(newState.getBlock())) {
-            if(world.getBlockEntity(pos) instanceof GasCableBlockEntity) {
-                GasCableBlockEntity blockEntity = (GasCableBlockEntity) world.getBlockEntity(pos);
-                blockEntity.setNodeProvider(null);
-                if(blockEntity.getNetwork() != null) {
-                    blockEntity.getNetwork().removeNode(blockEntity);
-                }
-            }
-            NebulaMod.LOGGER.info("destroyed");
-            world.removeBlockEntity(pos);
-        }
+        super.onStateReplaced(state, world, pos, newState, moved);
+//        if (state.hasBlockEntity() && !state.isOf(newState.getBlock())) {
+////            if(world.getBlockEntity(pos) instanceof GasCableBlockEntity) {
+//            GasCableBlockEntity blockEntity = (GasCableBlockEntity) world.getBlockEntity(pos);
+//            for (Direction dir : Direction.values()) {
+//                BlockEntity blockEntity1 = world.getBlockEntity(pos.offset(dir));
+//                if (blockEntity1 instanceof Node) {
+//                    world.setBlockState(blockEntity1.getPos(), world.getBlockState(blockEntity1.getPos()).with(getFacing(dir.getOpposite()), false));
+//                }
+//            }
+//            blockEntity.setNodeProvider(null);
+//            if (blockEntity.getNetwork() != null) {
+//                blockEntity.getNetwork().removeNode(blockEntity);
+//            }
+////            }
+//            NebulaMod.LOGGER.info("destroyed");
+//            world.removeBlockEntity(pos);
+//        }
     }
 
     @Override
@@ -98,7 +105,6 @@ public class BasicGasCable extends BlockWithEntity {
     @SuppressWarnings("deprecation")
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        NebulaMod.LOGGER.info("testfdsgsg");
         if (state.hasBlockEntity()) {
             if (world.getBlockEntity(pos) instanceof GasCableBlockEntity) {
                 GasCableBlockEntity blockEntity = (GasCableBlockEntity) world.getBlockEntity(pos);
@@ -108,8 +114,11 @@ public class BasicGasCable extends BlockWithEntity {
                 }
             }
         }
+        if(world.getBlockEntity(neighborPos) == null) {
+            return state.with(getFacing(direction), false);
+        }
         if (world.getBlockEntity(neighborPos) instanceof Machine || world.getBlockEntity(neighborPos) instanceof Node)
-            return state.with(getFacing(direction),true );
+            return state.with(getFacing(direction), true);
         return state;
     }
 
@@ -122,17 +131,17 @@ public class BasicGasCable extends BlockWithEntity {
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         VoxelShape nodeShape = NODE;
-        if(state.get(Properties.UP))
+        if (state.get(Properties.UP))
             nodeShape = VoxelShapes.combineAndSimplify(nodeShape, N_UP, BooleanBiFunction.OR);
-        if(state.get(Properties.DOWN))
+        if (state.get(Properties.DOWN))
             nodeShape = VoxelShapes.combineAndSimplify(nodeShape, N_DOWN, BooleanBiFunction.OR);
-        if(state.get(Properties.NORTH))
+        if (state.get(Properties.NORTH))
             nodeShape = VoxelShapes.combineAndSimplify(nodeShape, N_NORTH, BooleanBiFunction.OR);
-        if(state.get(Properties.SOUTH))
+        if (state.get(Properties.SOUTH))
             nodeShape = VoxelShapes.combineAndSimplify(nodeShape, N_SOUTH, BooleanBiFunction.OR);
-        if(state.get(Properties.EAST))
+        if (state.get(Properties.EAST))
             nodeShape = VoxelShapes.combineAndSimplify(nodeShape, N_EAST, BooleanBiFunction.OR);
-        if(state.get(Properties.WEST))
+        if (state.get(Properties.WEST))
             nodeShape = VoxelShapes.combineAndSimplify(nodeShape, N_WEST, BooleanBiFunction.OR);
         return nodeShape;
     }

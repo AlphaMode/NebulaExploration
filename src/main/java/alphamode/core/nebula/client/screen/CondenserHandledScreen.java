@@ -21,6 +21,7 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -87,8 +88,7 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
                 List<Text> tooltip = new ArrayList<>();
 
                 tooltip.add(cursed.getGas().getName());
-
-                tooltip.add(new TranslatableText("gui.nebula.concentration").append(": " + Util.getAtmosphereGas(client.player).get(0).getAmount() + " mB/tick").formatted(Formatting.GRAY));
+                tooltip.add(new LiteralText(Util.getAtmosphereGas(client.player).get(0).getAmount()+"").append(new TranslatableText("gui.nebula.concentration")).formatted(Formatting.GRAY));
                 Util.appendModIdToTooltips(tooltip, NebulaMod.MOD_ID);
                 renderTooltip(matrixStack, tooltip, mouseX, mouseY);
             }
@@ -109,8 +109,8 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         int ay = (height - backgroundHeight) / 2;
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         //client.getTextureManager().bindTexture(TEXTURE);
-        RenderSystem.setShaderTexture(0, TEXTURE);
         renderGases(matrixStack);
+        RenderSystem.setShaderTexture(0, TEXTURE);
         RenderSystem.disableDepthTest();
         drawTexture(matrixStack, ax + 11, ay + 16, 0, 166, 20, 59);
         drawTexture(matrixStack, ax + 39, ay + 16, 0, 166, 20, 59);
