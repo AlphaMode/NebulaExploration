@@ -94,17 +94,9 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     public boolean isEmpty() {
-        Iterator var1 = this.items.iterator();
-
-        ItemStack itemStack;
-        do {
-            if (!var1.hasNext()) {
+        for (ItemStack stack : this.items)
+            if (!stack.isEmpty())
                 return true;
-            }
-
-            itemStack = (ItemStack) var1.next();
-        } while (itemStack.isEmpty());
-
         return false;
     }
 
