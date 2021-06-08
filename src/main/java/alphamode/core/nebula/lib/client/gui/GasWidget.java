@@ -1,17 +1,9 @@
 package alphamode.core.nebula.lib.client.gui;
 
-import alphamode.core.nebula.gases.Gas;
 import alphamode.core.nebula.gases.GasVolume;
-import alphamode.core.nebula.lib.client.GuiUtil;
-import alphamode.core.nebula.util.Util;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-
-import static alphamode.core.nebula.lib.client.GuiUtil.setColorRGBA;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.Sprite;

@@ -2,23 +2,19 @@ package alphamode.core.nebula.gases;
 
 import alphamode.core.nebula.NebulaRegistry;
 import static alphamode.core.nebula.NebulaMod.id;
-import java.awt.*;
 
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class NebulaGases {
 
-    public static final Gas EMPTY;
-    public static final Gas OXYGEN;
-    public static final Gas NITROGEN;
+    public static final Gas EMPTY = register(id("empty"), new Gas());
+    public static final Gas OXYGEN = register(id("oxygen"), new Gas());
+    public static final Gas NITROGEN = register(id("nitrogen"), new Gas(0xFFA6A6EC));
 
-    public static void init() {
+    public static void init() {}
 
-    }
-
-    static {
-        EMPTY = Registry.register(NebulaRegistry.GAS, id("empty"), new Gas());
-        OXYGEN = Registry.register(NebulaRegistry.GAS, id("oxygen"), new Gas());
-        NITROGEN = Registry.register(NebulaRegistry.GAS, id("nitrogen"), new Gas(new Color(0xA6A6EC).getRGB()));
+    public static Gas register(Identifier id, Gas gas) {
+        return Registry.register(NebulaRegistry.GAS, id, gas);
     }
 }

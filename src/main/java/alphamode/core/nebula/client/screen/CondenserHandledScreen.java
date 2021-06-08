@@ -1,12 +1,10 @@
 package alphamode.core.nebula.client.screen;
 
-import alphamode.core.nebula.NebulaMod;
-import alphamode.core.nebula.NebulaRegistry;
 import alphamode.core.nebula.gases.GasVolume;
+import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.screen.CondenserScreenHandler;
 import alphamode.core.nebula.util.Util;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import static alphamode.core.nebula.NebulaMod.id;
 import alphamode.core.nebula.lib.client.GuiUtil;
@@ -16,7 +14,6 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -29,6 +26,7 @@ import java.util.List;
 
 public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler> {
     private static final Identifier TEXTURE = id("textures/gui/condenser.png");
+    private static Sprite fluidSprite;
 
     private List<GasVolume> tankGases;
     private List<GasVolume> atmosphericGases;
@@ -40,6 +38,8 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
 
     public CondenserHandledScreen(CondenserScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
+        fluidSprite = FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER.getStill())
+                .getFluidSprites(inventory.player.world, BlockPos.ORIGIN, Fluids.WATER.getStill().getDefaultState())[0];
     }
 
     @Override
@@ -49,7 +49,7 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         titleX = 7;//(imageWidth - font.width(title)) / 2;
         titleY = 5;
 
-        updateTank(new ArrayList<>());
+        updateTank(List.of(new GasVolume(NebulaGases.NITROGEN, 40),new GasVolume(NebulaGases.OXYGEN, 12)));
         updateAtmosphere(Util.getAtmosphereGas(client.player));
     }
 
@@ -63,35 +63,26 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
 
     @Override
     protected void drawBackground(MatrixStack matrixStack, float delta, int x, int y) {
-        int ax = (width - backgroundWidth) / 2;
-        int ay = (height - backgroundHeight) / 2;
         renderGases(matrixStack);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        RenderSystem.disableDepthTest();
-        drawTexture(matrixStack, ax + 11, ay + 16, 0, 166, 20, 59);
-        drawTexture(matrixStack, ax + 39, ay + 16, 0, 166, 20, 59);
-        drawTexture(matrixStack, ax, ay, 0, 0, backgroundWidth, backgroundHeight);
-        RenderSystem.enableDepthTest();
+        drawTexture(matrixStack, this.x, this.y, 0, 0, backgroundWidth, backgroundHeight);
     }
 
     public void renderGases(MatrixStack matrixStack) {
-        FluidRenderHandler fluidRenderHandler = FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER.getStill());
-        Sprite[] sprites = fluidRenderHandler.getFluidSprites(client.world, client.world == null ? null : BlockPos.ORIGIN, Fluids.WATER.getStill().getDefaultState());
-
         int offset = 67;
         for (var entry : atmosphereRenderCache) {
             int height = entry.getRight();
-            GuiUtil.setColorRGBA(entry.getLeft().getGas().getColor());
-            GuiUtil.renderTiledTextureAtlas(matrixStack, this, sprites[0], 11, offset - height, 20, height, 100, false);
+            GuiUtil.setColorARGB(entry.getLeft().getGas().getColor());
+            GuiUtil.renderTiledTextureAtlas(matrixStack, this, fluidSprite, 11, offset - height, 20, height, 0, false);
             offset -= height;
         }
 
         offset = 67;
         for (var entry : tankRenderCache) {
             int height = entry.getRight();
-            GuiUtil.setColorRGBA(entry.getLeft().getGas().getColor());
-            GuiUtil.renderTiledTextureAtlas(matrixStack, this, sprites[0], 39, offset - height, 20, height, 100, true);
+            GuiUtil.setColorARGB(entry.getLeft().getGas().getColor());
+            GuiUtil.renderTiledTextureAtlas(matrixStack, this, fluidSprite, 39, offset - height, 20, height, 0, true);
             offset -= entry.getRight();
         }
     }
@@ -126,30 +117,28 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
     }
 
     public void updateTank(List<GasVolume> gases) {
-        if (tankGases == null || !tankGases.equals(gases)) {
-            tankGases = gases;
-            updatePixelsPerGas(tankGases, tankRenderCache);
-        }
+        if (tankGases != null && tankGases.equals(gases))
+            return;
+
+        tankGases = gases;
+        tankRenderCache.clear();
+
+        for (GasVolume gas : gases)
+            tankRenderCache.add(new Pair<>(gas, Math.max(2, (int) (52.0 * gas.getAmount() / maxAmount) )));
     }
 
     public void updateAtmosphere(List<GasVolume> gases) {
-        if (atmosphericGases == null || !atmosphericGases.equals(gases)) {
-            atmosphericGases = gases;
-            updatePixelsPerGas(atmosphericGases, atmosphereRenderCache);
-        }
-    }
+        if (atmosphericGases != null && atmosphericGases.equals(gases))
+            return;
 
-    private void updatePixelsPerGas(List<GasVolume> gases, List<Pair<GasVolume, Integer>> renderCache) {
-        renderCache.clear();
-        int numGasses = gases.size();
+        atmosphericGases = gases;
+        atmosphereRenderCache.clear();
+
         double sumVolume = gases.stream().mapToInt(GasVolume::getAmount).sum();
-        int pixelsAvailable = 52 - numGasses*2;
+        int pixelsAvailable = 52 - gases.size()*2;
 
         for (GasVolume gas : gases)
-            renderCache.add(new Pair<>(gas, (int) (gas.getAmount() / sumVolume * pixelsAvailable + 2)));
+            atmosphereRenderCache.add(new Pair<>(gas, (int) (gas.getAmount() / sumVolume * pixelsAvailable + 2)));
     }
-
-
-
 
 }

@@ -2,7 +2,6 @@ package alphamode.core.nebula.gases;
 
 import alphamode.core.nebula.NebulaRegistry;
 import org.jetbrains.annotations.Nullable;
-import java.awt.*;
 
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -12,7 +11,7 @@ public class Gas {
 
     @Nullable
     private String translationKey;
-    private int color;
+    private final int color;
 
     //Only to make it show up in REI
 
@@ -22,7 +21,7 @@ public class Gas {
     }
 
     public Gas() {
-        color = new Color(0xFFFFFF).getRGB();
+        color = 0xFFFFFFFF;
     }
 
 

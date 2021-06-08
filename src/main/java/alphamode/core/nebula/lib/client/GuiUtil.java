@@ -10,7 +10,7 @@ import net.minecraft.util.math.Matrix4f;
 
 //Helper methods for gui
 public class GuiUtil {
-    public static void setColorRGBA(int color) {
+    public static void setColorARGB(int color) {
         float a = alpha(color) / 255.0F;
         float r = red(color) / 255.0F;
         float g = green(color) / 255.0F;
