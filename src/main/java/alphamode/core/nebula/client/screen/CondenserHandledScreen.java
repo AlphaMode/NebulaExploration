@@ -1,5 +1,6 @@
 package alphamode.core.nebula.client.screen;
 
+import alphamode.core.nebula.NebulaRegistry;
 import alphamode.core.nebula.gases.GasVolume;
 import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.screen.CondenserScreenHandler;
@@ -9,11 +10,13 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import static alphamode.core.nebula.NebulaMod.id;
 import alphamode.core.nebula.lib.client.GuiUtil;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -49,7 +52,7 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         titleX = 7;//(imageWidth - font.width(title)) / 2;
         titleY = 5;
 
-        updateTank(List.of(new GasVolume(NebulaGases.NITROGEN, 40),new GasVolume(NebulaGases.OXYGEN, 12)));
+        updateTank(List.of(new GasVolume(NebulaGases.NITROGEN, 40), new GasVolume(NebulaGases.OXYGEN, 12)));
         updateAtmosphere(Util.getAtmosphereGas(client.player));
     }
 
@@ -101,7 +104,7 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         offset = 67;
         for (var entry : tankRenderCache) {
             if (checkX >= 39 && checkX <= 59 && checkY >= offset - entry.getRight() && checkY < offset)
-                renderGasTooltip(matrixStack, mouseX, mouseY, entry.getLeft());
+                renderTooltip(matrixStack, entry.getLeft().getTooltip(), mouseX, mouseY);
             offset -= entry.getRight();
         }
 
@@ -111,9 +114,10 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         List<Text> tooltip = new ArrayList<>();
         tooltip.add(gas.getGas().getName());
         tooltip.add(new TranslatableText("gui.nebula.concentration", gas.getAmount()).formatted(Formatting.GRAY));
-        tooltip.add( Util.gasModToolTip( gas.getGas() ) );
+        if (this.client.options.advancedItemTooltips)
+            tooltip.add(new LiteralText(NebulaRegistry.GAS.getId(gas.getGas()).toString()).formatted(Formatting.DARK_GRAY));
+        tooltip.add(Util.gasModToolTip(gas.getGas()));
         renderTooltip(matrixStack, tooltip, x, y);
-
     }
 
     public void updateTank(List<GasVolume> gases) {
@@ -124,7 +128,7 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         tankRenderCache.clear();
 
         for (GasVolume gas : gases)
-            tankRenderCache.add(new Pair<>(gas, Math.max(2, (int) (52.0 * gas.getAmount() / maxAmount) )));
+            tankRenderCache.add(new Pair<>(gas, Math.max(2, (int) (52.0 * gas.getAmount() / maxAmount))));
     }
 
     public void updateAtmosphere(List<GasVolume> gases) {
@@ -135,7 +139,7 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         atmosphereRenderCache.clear();
 
         double sumVolume = gases.stream().mapToInt(GasVolume::getAmount).sum();
-        int pixelsAvailable = 52 - gases.size()*2;
+        int pixelsAvailable = 52 - gases.size() * 2;
 
         for (GasVolume gas : gases)
             atmosphereRenderCache.add(new Pair<>(gas, (int) (gas.getAmount() / sumVolume * pixelsAvailable + 2)));

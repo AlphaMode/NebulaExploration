@@ -6,9 +6,19 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.attributes.fluid.volume.SimpleFluidKey;
 import alphamode.core.nebula.NebulaRegistry;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+
+import alphamode.core.nebula.util.Util;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 //Wrapper for fluidvolume
 public final class GasVolume {
@@ -20,7 +30,10 @@ public final class GasVolume {
     public GasVolume(Gas gas, long gasAmount) {
         this.owner = gas;
         this.gasAmount = gasAmount;
-        key = new SimpleFluidKey(new FluidKey.FluidKeyBuilder(NebulaRegistry.GAS.getId(gas)).setGas().setRenderColor(gas.getColor()).setName(gas.getName()));
+        key = new SimpleFluidKey(new FluidKey.FluidKeyBuilder(NebulaRegistry.GAS.getId(gas))
+                .setGas()
+                .setRenderColor(gas.getColor())
+                .setName(gas.getName()));
     }
 
 
@@ -33,7 +46,7 @@ public final class GasVolume {
      * @return Returns the amount in mB
      */
     public int getAmount() {
-        return this.toFluidVolume().getAmount_F().asInt(1000);//this.gasAmount;
+        return toFluidVolume().getAmount_F().asInt(1000);
     }
 
     public static GasVolume fromTag(NbtCompound tag) {
@@ -47,11 +60,26 @@ public final class GasVolume {
     }
 
     public FluidVolume toFluidVolume() {
-        return key.withAmount(FluidAmount.of(gasAmount,1000));
+        return key.withAmount(FluidAmount.of(gasAmount, 1000));
     }
 
     public void setAmount(long l) {
         gasAmount = l;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public List<Text> getTooltip() {
+        return getTooltip(new ArrayList<>());
+    }
+
+    @Environment(EnvType.CLIENT)
+    public List<Text> getTooltip(List<Text> tooltip) {
+        tooltip.add(owner.getName());
+        tooltip.add(new LiteralText(getAmount()+" mB").formatted(Formatting.GRAY));
+        if(MinecraftClient.getInstance().options.advancedItemTooltips)
+            tooltip.add(new LiteralText(NebulaRegistry.GAS.getId(owner).toString()).formatted(Formatting.DARK_GRAY));
+        tooltip.add(Util.gasModToolTip(owner));
+        return tooltip;
     }
 
 }

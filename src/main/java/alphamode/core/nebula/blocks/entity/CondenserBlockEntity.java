@@ -1,5 +1,6 @@
 package alphamode.core.nebula.blocks.entity;
 
+import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alphamode.core.nebula.api.Machine;
 import alphamode.core.nebula.blocks.NebulaBlocks;
 import alphamode.core.nebula.gases.GasVolume;
@@ -10,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FluidDrainable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,7 +27,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class CondenserBlockEntity extends LockableContainerBlockEntity implements Machine<GasVolume> {
+public class CondenserBlockEntity extends LockableContainerBlockEntity implements Machine<GasVolume>, FluidExtractable {
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(1, ItemStack.EMPTY);
     public List<CondenserScreenHandler> handlers = new ArrayList<>();
     private List<GasVolume> gases = new ArrayList<>();
