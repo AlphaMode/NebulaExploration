@@ -70,7 +70,7 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     public ScreenHandler createMenu(int syncID, PlayerInventory inventory, PlayerEntity player) {
-        //this.gases.clear();
+        gases.clear();
         gases.add(new GasVolume(NebulaGases.NITROGEN, 40));
         gases.add(new GasVolume(NebulaGases.OXYGEN, 12));
         CondenserScreenHandler handler = new CondenserScreenHandler(syncID, inventory, this);

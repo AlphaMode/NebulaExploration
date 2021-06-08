@@ -142,7 +142,6 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
     private void updatePixelsPerGas(List<GasVolume> gases, List<Pair<GasVolume, Integer>> renderCache) {
         renderCache.clear();
         int numGasses = gases.size();
-        System.out.println(renderCache.size());
         double sumVolume = gases.stream().mapToInt(GasVolume::getAmount).sum();
         int pixelsAvailable = 52 - numGasses*2;
 
