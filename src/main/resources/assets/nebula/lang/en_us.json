@@ -11,5 +11,14 @@
   "gui.nebula.concentration": "%s mB/t",
   "gas.nebula.empty": "Empty",
   "gas.nebula.oxygen": "Oxygen",
-  "gas.nebula.nitrogen": "Nitrogen"
+  "gas.nebula.nitrogen": "Nitrogen",
+
+  "unit.temperature.kelvin": "%s K",
+  "unit.temperature.celsius": "%s °C",
+  "unit.temperature.fahrenheit": "%s °F",
+  "unit.pressure.atm": "%s atm",
+  "unit.pressure.pa": "%s Pa",
+  "unit.pressure.mmhg": "%s mmHg",
+  "unit.pressure.torr": "%s Torr"
+
 }

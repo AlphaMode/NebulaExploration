@@ -1,7 +1,7 @@
 package alphamode.core.nebula;
 
 import alphamode.core.nebula.blocks.NebulaBlocks;
-import alphamode.core.nebula.dimensions.NebulaDimensions;
+import alphamode.core.nebula.dimensions.NebulaPlanets;
 import alphamode.core.nebula.fluids.NebulaFluids;
 import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.items.NebulaItems;
@@ -16,10 +16,6 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionOptions;
 
 public class NebulaMod implements ModInitializer {
 
@@ -34,10 +30,6 @@ public class NebulaMod implements ModInitializer {
         return new Identifier(MOD_ID, id);
     }
 
-    private final RegistryKey<DimensionOptions> DIMENSION_KEY = RegistryKey.of(Registry.DIMENSION_KEY,id("outter_space"));
-
-    private RegistryKey<World> LEVEL_KEY = RegistryKey.of(Registry.WORLD_KEY, DIMENSION_KEY.getValue());
-
     @Override
     public void onInitialize() {
         NebulaRegistry.init();
@@ -47,7 +39,7 @@ public class NebulaMod implements ModInitializer {
         NebulaGases.init();
         NebulaFeatures.init();
         NebulaFluids.init();
-        NebulaDimensions.init();
+        NebulaPlanets.init();
         if(FabricLoader.getInstance().isModLoaded("roughlyenoughitems")) {
             LOGGER.info("Loading REI plugin.");
             //RoughlyEnoughItemsCore.registerPlugin(new NebulaPlugin());
