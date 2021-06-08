@@ -96,8 +96,8 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
     public boolean isEmpty() {
         for (ItemStack stack : this.items)
             if (!stack.isEmpty())
-                return true;
-        return false;
+                return false;
+        return true;
     }
 
     @Override
