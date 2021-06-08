@@ -1,6 +1,7 @@
 package alphamode.core.nebula.packet;
 
 
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alphamode.core.nebula.client.screen.CondenserHandledScreen;
 import alphamode.core.nebula.gases.GasVolume;
 import io.netty.buffer.Unpooled;
@@ -25,10 +26,10 @@ public class GasTankS2CPacket {
 
     public static void onPacket(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         NbtCompound data = buf.readNbt();
-        List<GasVolume> gases = new ArrayList<>();
+        List<FluidVolume> gases = new ArrayList<>();
         NbtList gasesList = data.getList("gases", 10);
         for(int i = 0; i<gasesList.size();i++) {
-            gases.add(GasVolume.fromTag(gasesList.getCompound(i)));
+            gases.add(FluidVolume.fromTag(gasesList.getCompound(i)));
         }
 
         gases.sort( (a,b) -> b.getAmount() - a.getAmount() );

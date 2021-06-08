@@ -1,5 +1,6 @@
 package alphamode.core.nebula.util;
 
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alphamode.core.nebula.NebulaRegistry;
 import alphamode.core.nebula.dimensions.NebulaPlanets;
 import alphamode.core.nebula.gases.Gas;
@@ -12,12 +13,14 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class Util {
 
@@ -37,11 +40,11 @@ public class Util {
         return new LiteralText(getModFromModId(modId)).formatted(Formatting.BLUE,Formatting.ITALIC);
     }
 
-    public static Text gasModToolTip(Gas gas) {
-        return Util.modToolTip(NebulaRegistry.GAS.getId(gas).getNamespace());
+    public static Text gasModToolTip(Fluid gas) {
+        return Util.modToolTip(Registry.FLUID.getId(gas).getNamespace());
     }
 
-    public static List<GasVolume> getAtmosphereGas(PlayerEntity playerEntity) {
+    public static List<FluidVolume> getAtmosphereGas(PlayerEntity playerEntity) {
         for(Identifier id: NebulaRegistry.PLANET.getIds()) {
             if(NebulaRegistry.PLANET.get(id).dimension().equals(playerEntity.world.getRegistryKey().getValue())) {
                 return NebulaRegistry.PLANET.get(id).atmosphereGases();

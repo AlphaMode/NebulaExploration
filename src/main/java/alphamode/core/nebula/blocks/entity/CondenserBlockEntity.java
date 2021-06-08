@@ -41,7 +41,7 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
         NbtList gasesTag = compoundTag.getList("gases", 10);
         this.gases = new ArrayList<>();
         for (int i = 0; i < gasesTag.size(); ++i) {
-            //this.gases.add(FluidVolume.fromTag(compoundTag));
+            this.gases.add(GasVolume.fromTag(gasesTag.getCompound(i)));
         }
     }
 

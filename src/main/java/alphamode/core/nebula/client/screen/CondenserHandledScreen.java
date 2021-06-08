@@ -1,5 +1,9 @@
 package alphamode.core.nebula.client.screen;
 
+import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import alexiil.mc.lib.attributes.fluid.volume.SimpleFluidVolume;
 import alphamode.core.nebula.gases.GasVolume;
 import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.screen.CondenserScreenHandler;
@@ -9,6 +13,7 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import static alphamode.core.nebula.NebulaMod.id;
 import alphamode.core.nebula.lib.client.GuiUtil;
 
+import net.minecraft.block.NetherWartBlock;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
@@ -28,10 +33,10 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
     private static final Identifier TEXTURE = id("textures/gui/condenser.png");
     private static Sprite fluidSprite;
 
-    private List<GasVolume> tankGases;
-    private List<GasVolume> atmosphericGases;
-    private final List<Pair<GasVolume, Integer>> tankRenderCache = new ArrayList<>();
-    private final List<Pair<GasVolume, Integer>> atmosphereRenderCache = new ArrayList<>();
+    private List<FluidVolume> tankGases;
+    private List<FluidVolume> atmosphericGases;
+    private final List<Pair<FluidVolume, Integer>> tankRenderCache = new ArrayList<>();
+    private final List<Pair<FluidVolume, Integer>> atmosphereRenderCache = new ArrayList<>();
 
     //Gas storaged in millibuckets
     private final int maxAmount = 8000;
@@ -49,7 +54,7 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         titleX = 7;//(imageWidth - font.width(title)) / 2;
         titleY = 5;
 
-        updateTank(List.of(new GasVolume(NebulaGases.NITROGEN, 40),new GasVolume(NebulaGases.OXYGEN, 12)));
+        updateTank(List.of(NebulaGases.NITROGEN_KEY.withAmount(FluidAmount.of(40, 1000)),NebulaGases.OXYGEN_KEY.withAmount(FluidAmount.of(12, 1000))));
         updateAtmosphere(Util.getAtmosphereGas(client.player));
     }
 
@@ -73,7 +78,7 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         int offset = 67;
         for (var entry : atmosphereRenderCache) {
             int height = entry.getRight();
-            GuiUtil.setColorARGB(entry.getLeft().getGas().getColor());
+            GuiUtil.setColorARGB(entry.getLeft().getRenderColor());
             GuiUtil.renderTiledTextureAtlas(matrixStack, this, fluidSprite, 11, offset - height, 20, height, 0, false);
             offset -= height;
         }
@@ -81,7 +86,7 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         offset = 67;
         for (var entry : tankRenderCache) {
             int height = entry.getRight();
-            GuiUtil.setColorARGB(entry.getLeft().getGas().getColor());
+            GuiUtil.setColorARGB(entry.getLeft().getRenderColor());
             GuiUtil.renderTiledTextureAtlas(matrixStack, this, fluidSprite, 39, offset - height, 20, height, 0, true);
             offset -= entry.getRight();
         }
@@ -107,37 +112,37 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
 
     }
 
-    private void renderGasTooltip(MatrixStack matrixStack, int x, int y, GasVolume gas) {
+    private void renderGasTooltip(MatrixStack matrixStack, int x, int y, FluidVolume gas) {
         List<Text> tooltip = new ArrayList<>();
-        tooltip.add(gas.getGas().getName());
+        tooltip.add(gas.getFluidKey().name);
         tooltip.add(new TranslatableText("gui.nebula.concentration", gas.getAmount()).formatted(Formatting.GRAY));
-        tooltip.add( Util.gasModToolTip( gas.getGas() ) );
+        tooltip.add( Util.gasModToolTip(gas.getRawFluid()));
         renderTooltip(matrixStack, tooltip, x, y);
 
     }
 
-    public void updateTank(List<GasVolume> gases) {
+    public void updateTank(List<FluidVolume> gases) {
         if (tankGases != null && tankGases.equals(gases))
             return;
 
         tankGases = gases;
         tankRenderCache.clear();
 
-        for (GasVolume gas : gases)
+        for (FluidVolume gas : gases)
             tankRenderCache.add(new Pair<>(gas, Math.max(2, (int) (52.0 * gas.getAmount() / maxAmount) )));
     }
 
-    public void updateAtmosphere(List<GasVolume> gases) {
+    public void updateAtmosphere(List<FluidVolume> gases) {
         if (atmosphericGases != null && atmosphericGases.equals(gases))
             return;
 
         atmosphericGases = gases;
         atmosphereRenderCache.clear();
 
-        double sumVolume = gases.stream().mapToInt(GasVolume::getAmount).sum();
+        double sumVolume = gases.stream().mapToInt(FluidVolume::getAmount).sum();
         int pixelsAvailable = 52 - gases.size()*2;
 
-        for (GasVolume gas : gases)
+        for (FluidVolume gas : gases)
             atmosphereRenderCache.add(new Pair<>(gas, (int) (gas.getAmount() / sumVolume * pixelsAvailable + 2)));
     }
 

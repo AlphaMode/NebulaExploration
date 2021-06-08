@@ -1,3 +1,11 @@
 {
-  "parent": "nebula:block/basic_gas_cable_middle"
+  "parent": "nebula:block/basic_gas_cable_middle",
+  "display": {
+    "firstperson_righthand": {
+      "scale": [0.7,0.7,0.7]
+    },
+    "gui": {
+      "rotation": [-56.25,0,-45]
+    }
+  }
 }

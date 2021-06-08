@@ -8,6 +8,8 @@ import alphamode.core.nebula.NebulaRegistry;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+
 import org.jetbrains.annotations.NotNull;
 
 //Wrapper for fluidvolume
@@ -20,7 +22,7 @@ public final class GasVolume {
     public GasVolume(Gas gas, long gasAmount) {
         this.owner = gas;
         this.gasAmount = gasAmount;
-        key = new SimpleFluidKey(new FluidKey.FluidKeyBuilder(NebulaRegistry.GAS.getId(gas)).setGas().setRenderColor(gas.getColor()).setName(gas.getName()));
+        key = new SimpleFluidKey(new FluidKey.FluidKeyBuilder(Registry.FLUID.getId(gas)).setGas().setRenderColor(gas.getColor()).setName(gas.getName()));
     }
 
 
