@@ -1,7 +1,7 @@
 package alphamode.core.nebula.client;
 
 import alphamode.core.nebula.NebulaRegistry;
-import alphamode.core.nebula.client.screen.CondenserHandledScreen;
+import alphamode.core.nebula.client.gui.screens.CondenserHandledScreen;
 import alphamode.core.nebula.gases.Gas;
 import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.items.NebulaItems;

@@ -10,6 +10,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
@@ -75,9 +76,9 @@ public final class GasVolume {
     @Environment(EnvType.CLIENT)
     public List<Text> getTooltip(List<Text> tooltip) {
         tooltip.add(owner.getName());
-        tooltip.add(new LiteralText(getAmount()+" mB").formatted(Formatting.GRAY));
+        tooltip.add(new TranslatableText("gui.nebula.concentration", gasAmount).formatted(Formatting.GRAY));
         if(MinecraftClient.getInstance().options.advancedItemTooltips)
-            tooltip.add(new LiteralText(NebulaRegistry.GAS.getId(owner).toString()).formatted(Formatting.DARK_GRAY));
+            tooltip.add(new LiteralText(owner.getId().toString()).formatted(Formatting.DARK_GRAY));
         tooltip.add(Util.gasModToolTip(owner));
         return tooltip;
     }

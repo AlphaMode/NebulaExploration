@@ -2,6 +2,7 @@ package alphamode.core.nebula.gases;
 
 import alphamode.core.nebula.NebulaRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.texture.Sprite;
@@ -14,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 public class Gas {
 
     @Nullable
+    private Identifier id;
     private String translationKey;
     private final int color;
     private Sprite gasTexture;
@@ -39,11 +41,16 @@ public class Gas {
 //        return gasTexture;
 //    }
 
+    public Identifier getId() {
+        if (id == null)
+            id = NebulaRegistry.GAS.getId(this);
+        return id;
+    }
+
     public String getTranslationKey() {
-        if (this.translationKey == null) {
-            this.translationKey = Util.createTranslationKey("gas", NebulaRegistry.GAS.getId(this));
-        }
-        return this.translationKey;
+        if (translationKey == null)
+            translationKey = Util.createTranslationKey("gas", getId());
+        return translationKey;
     }
 
     public Text getName() {

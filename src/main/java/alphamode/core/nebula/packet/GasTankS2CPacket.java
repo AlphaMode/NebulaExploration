@@ -1,7 +1,7 @@
 package alphamode.core.nebula.packet;
 
 
-import alphamode.core.nebula.client.screen.CondenserHandledScreen;
+import alphamode.core.nebula.client.gui.screens.CondenserHandledScreen;
 import alphamode.core.nebula.gases.GasVolume;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import static alphamode.core.nebula.NebulaMod.id;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import net.minecraft.client.MinecraftClient;
