@@ -17,7 +17,7 @@ public class NebulaGases {
 
     public static final FluidKey EMPTY_KEY = createFluidKey(EMPTY);
     public static final FluidKey OXYGEN_KEY = createFluidKey(OXYGEN);
-    public static final SimpleFluidKey NITROGEN_KEY = createFluidKey(NITROGEN);
+    public static final FluidKey NITROGEN_KEY = createFluidKey(NITROGEN);
 
     public static void init() {}
 

@@ -1,10 +1,7 @@
-package alphamode.core.nebula.client.screen;
+package alphamode.core.nebula.client.screens;
 
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.lib.attributes.fluid.volume.SimpleFluidVolume;
-import alphamode.core.nebula.gases.GasVolume;
 import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.screen.CondenserScreenHandler;
 import alphamode.core.nebula.util.Util;
@@ -13,7 +10,6 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import static alphamode.core.nebula.NebulaMod.id;
 import alphamode.core.nebula.lib.client.GuiUtil;
 
-import net.minecraft.block.NetherWartBlock;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;

@@ -12,7 +12,7 @@ public class NebulaPlanets {
 
     public static final Planet EARTH = new Planet.Builder(DimensionType.OVERWORLD_ID)
             .radius(63)
-            .atmosphere(193, NebulaGases.OXYGEN, 2000, NebulaGases.NITROGEN, 1000)
+            .atmosphere(193, NebulaGases.OXYGEN_KEY, 2000, NebulaGases.NITROGEN_KEY, 1000)
             .heightToTemperature(y -> 256.0 - y)
             .heightToPressure(y -> 256.0 - y)
             .register();

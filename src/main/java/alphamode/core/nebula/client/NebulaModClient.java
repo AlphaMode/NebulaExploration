@@ -1,10 +1,6 @@
 package alphamode.core.nebula.client;
 
-import alphamode.core.nebula.NebulaRegistry;
-import alphamode.core.nebula.client.screen.CondenserHandledScreen;
-import alphamode.core.nebula.fluids.NebulaFluid;
-import alphamode.core.nebula.fluids.NebulaFluids;
-import alphamode.core.nebula.gases.Gas;
+import alphamode.core.nebula.client.screens.CondenserHandledScreen;
 import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.items.NebulaItems;
 import alphamode.core.nebula.packet.GasTankS2CPacket;
@@ -22,7 +18,6 @@ import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredica
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import static alphamode.core.nebula.NebulaMod.id;
-import java.awt.*;
 import java.util.function.Function;
 
 import net.minecraft.client.MinecraftClient;
