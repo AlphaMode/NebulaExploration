@@ -2,23 +2,28 @@
   "item.nebula.basic_oxygen_tank": "Oxygen Tank",
   "item.nebula.mustard_bomb": "Mustard Bomb",
   "item.nebula.fan": "Fan",
+  "item.nebula.rocket_fuel_bucket": "Rocket Fuel Bucket",
   "block.nebula.condenser": "Condenser",
   "block.nebula.aluminum_ore": "Aluminum Ore",
   "block.nebula.basic_gas_cable": "Basic Gas Cable",
   "itemGroup.nebula.space_misc": "Space Items",
   "itemGroup.nebula.space_machines": "Space Machines",
+  "block.nebula.rocket_fuel": "Rocket Fuel",
   "gui.condenser.name": "Gas Condenser",
   "gui.nebula.concentration": "%s mB/t",
   "gas.nebula.empty": "Empty",
   "gas.nebula.oxygen": "Oxygen",
   "gas.nebula.nitrogen": "Nitrogen",
-
   "unit.temperature.kelvin": "%s K",
   "unit.temperature.celsius": "%s °C",
   "unit.temperature.fahrenheit": "%s °F",
   "unit.pressure.atm": "%s atm",
   "unit.pressure.pa": "%s Pa",
   "unit.pressure.mmhg": "%s mmHg",
-  "unit.pressure.torr": "%s Torr"
+  "unit.pressure.torr": "%s Torr",
+
+  "modmenu.config.title": "Nebula Config",
+  "modmenu.config.temperature.unit": "Temperature Unit",
+  "modmenu.config.temperature.unit.info": "What unit should temperature be displayed"
 
 }

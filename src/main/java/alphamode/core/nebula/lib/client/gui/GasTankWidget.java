@@ -3,6 +3,7 @@ package alphamode.core.nebula.lib.client.gui;
 import alphamode.core.nebula.gases.GasVolume;
 import alphamode.core.nebula.lib.client.GuiUtil;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.texture.Sprite;
@@ -14,9 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GasTankWidget {
+public class GasTankWidget extends Widget {
 
-    private static final MinecraftClient client = MinecraftClient.getInstance();
     private static Sprite fluidSprite = null;
 
     private final int x, y;
@@ -26,6 +26,7 @@ public class GasTankWidget {
     private final List<Pair<GasVolume, Integer>> renderCache = new ArrayList<>();
 
     public GasTankWidget(HandledScreen<?> screen, int x, int y, List<GasVolume> gases, int maxVolume) {
+        super(screen.x + x, screen.y + y);
         this.screen = screen;
         this.x = screen.x + x;
         this.y = screen.y + y;
@@ -53,7 +54,7 @@ public class GasTankWidget {
     public void renderTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
         int offset = y + 52;
         for (var entry : renderCache) {
-            if (mouseX >= x && mouseX <= x+20 && mouseY >= offset - entry.getRight() && mouseY < offset)
+            if (mouseX >= x && mouseX <= x + 20 && mouseY >= offset - entry.getRight() && mouseY < offset)
                 screen.renderTooltip(matrixStack, entry.getLeft().getTooltip(), mouseX, mouseY);
             offset -= entry.getRight();
         }
@@ -66,6 +67,7 @@ public class GasTankWidget {
             update();
         }
     }
+
     public void setMaxVolume(int maxVolume) {
         if (this.maxVolume != maxVolume) {
             this.maxVolume = maxVolume;
@@ -81,8 +83,7 @@ public class GasTankWidget {
 
             for (GasVolume gas : gases)
                 renderCache.add(new Pair<>(gas, (int) (gas.getAmount() / sumVolume * pixelsAvailable + 2)));
-        }
-        else {
+        } else {
             for (GasVolume gas : gases)
                 renderCache.add(new Pair<>(gas, Math.max(2, (int) (52.0 * gas.getAmount() / maxVolume))));
         }

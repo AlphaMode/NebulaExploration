@@ -19,7 +19,10 @@
       "alphamode.core.nebula.NebulaMod"
     ],
     "rei": [
-      "alphamode.core.nebula.rei.NebulaPlugin"
+      "alphamode.core.nebula.compat.rei.NebulaPlugin"
+    ],
+    "modmenu": [
+      "alphamode.core.nebula.compat.modmenu.NebulaModMenu"
     ]
   },
   "mixins": [

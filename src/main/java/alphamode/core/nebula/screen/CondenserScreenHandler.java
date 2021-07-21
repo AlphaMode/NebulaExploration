@@ -43,7 +43,7 @@ public class CondenserScreenHandler extends ScreenHandler {
     }
 
     public void tick() {
-        playerEntity.networkHandler.sendPacket(GasTankS2CPacket.create(((CondenserBlockEntity)inventory).getGases()));
+        playerEntity.networkHandler.sendPacket(GasTankS2CPacket.create(((CondenserBlockEntity)inventory).getTank()));
     }
 
     @Override

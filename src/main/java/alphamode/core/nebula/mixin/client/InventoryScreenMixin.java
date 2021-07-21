@@ -1,4 +1,4 @@
-package alphamode.core.nebula.client.mixin;
+package alphamode.core.nebula.mixin.client;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;

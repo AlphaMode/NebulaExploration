@@ -1,7 +1,9 @@
 package alphamode.core.nebula;
 
+import alphamode.core.nebula.api.CableNetwork;
 import alphamode.core.nebula.blocks.NebulaBlocks;
 import alphamode.core.nebula.dimensions.NebulaPlanets;
+import alphamode.core.nebula.entitys.NebulaEntities;
 import alphamode.core.nebula.fluids.NebulaFluids;
 import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.items.NebulaItems;
@@ -13,12 +15,19 @@ import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.block.ComposterBlock;
+import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.CraftingRecipe;
+import net.minecraft.recipe.SmeltingRecipe;
 import net.minecraft.util.Identifier;
 
 public class NebulaMod implements ModInitializer {
+
+    //TODO: This value is only temporary
+    public static final CableNetwork GLOBAL_NETWORK = new CableNetwork();
 
     public static final String MOD_ID = "nebula";
 
@@ -33,6 +42,7 @@ public class NebulaMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        LOGGER.info("Initializing");
         NebulaRegistry.init();
         NebulaItems.init();
         NebulaBlocks.init();
@@ -41,9 +51,7 @@ public class NebulaMod implements ModInitializer {
         NebulaFeatures.init();
         NebulaFluids.init();
         NebulaPlanets.init();
-        if(FabricLoader.getInstance().isModLoaded("roughlyenoughitems")) {
-            LOGGER.info("Loading REI plugin.");
-            //RoughlyEnoughItemsCore.registerPlugin(new NebulaPlugin());
-        }
+        NebulaEntities.init();
+        LOGGER.info("Finished Initializing");
     }
 }

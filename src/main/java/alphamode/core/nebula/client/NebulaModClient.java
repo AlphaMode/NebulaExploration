@@ -1,7 +1,11 @@
 package alphamode.core.nebula.client;
 
 import alphamode.core.nebula.NebulaRegistry;
+import alphamode.core.nebula.api.NebulaID;
 import alphamode.core.nebula.client.gui.screens.CondenserHandledScreen;
+import alphamode.core.nebula.entitys.NebulaEntities;
+import alphamode.core.nebula.entitys.rocket.RocketEntityRenderer;
+import alphamode.core.nebula.fluids.NebulaFluids;
 import alphamode.core.nebula.gases.Gas;
 import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.items.NebulaItems;
@@ -12,6 +16,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
@@ -24,11 +31,13 @@ import java.util.function.Function;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockRenderView;
 
 @Environment(EnvType.CLIENT)
@@ -46,21 +55,14 @@ public class NebulaModClient implements ClientModInitializer {
             return itemStack.getOrCreateTag().getInt("amount") == 0 ? 0 : getStage(itemStack.getOrCreateTag().getInt("amount"));
         });
         ClientPlayNetworking.registerGlobalReceiver(GasTankS2CPacket.ID, GasTankS2CPacket::onPacket);
-        /*ClientPlayNetworking.registerGlobalReceiver(id("condenser_update"),(client, handler, buf, responseSender) -> {
-            client.execute(() -> {
-                List<FluidVolume> gases = new ArrayList<>();
-                ListTag gasesTag = buf.readCompoundTag().getList("gases", 0);
-                for(int v = 0; v < gasesTag.size(); ++v) {
-                    gases.add(FluidVolume.fromTag((CompoundTag) gasesTag.get(v)));
-                }
-                //tank = gases;
-            });
-        });*/
-        setupFluidRendering(NebulaGases.OXYGEN, new Identifier("water"),new Color(0xFFFFFF).getRGB());
-        setupFluidRendering(NebulaGases.NITROGEN, new Identifier("water"), new Color(0xA6A6EC).getRGB());
-        //BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), NebulaGases.OXYGEN);
+
+        setupGasRendering(NebulaGases.OXYGEN, new Identifier("water"),new Color(0xFFFFFF).getRGB());
+        setupGasRendering(NebulaGases.NITROGEN, new Identifier("water"), new Color(0xA6A6EC).getRGB());
+        setupFluidRendering(NebulaFluids.ROCKET_FUEL.still(), NebulaFluids.ROCKET_FUEL.flowing(), new Identifier("water"), new Color(0xFFB61D).getRGB());
+        EntityRendererRegistry.INSTANCE.register(NebulaEntities.CREATIVE_ROCKET, (context) -> new RocketEntityRenderer(context));
+        //EntityModelLayerRegistry.registerModelLayer(MODEL_CUBE_LAYER, CubeEntityModel::getTexturedModelData);
     }
-    public static void setupFluidRendering(final Gas gas, final Identifier textureFluidId, final int color) {
+    public static void setupGasRendering(final Gas gas, final Identifier textureFluidId, final int color) {
         final Identifier stillSpriteId = new Identifier(textureFluidId.getNamespace(), "block/" + textureFluidId.getPath() + "_still");
 
         // If they're not already present, add the sprites to the block atlas
@@ -103,5 +105,55 @@ public class NebulaModClient implements ClientModInitializer {
             }
         };
 
+    }
+
+    public static void setupFluidRendering(final Fluid still, final Fluid flowing, final Identifier textureFluidId, final int color) {
+        final Identifier stillSpriteId = new Identifier(textureFluidId.getNamespace(), "block/" + textureFluidId.getPath() + "_still");
+        final Identifier flowingSpriteId = new Identifier(textureFluidId.getNamespace(), "block/" + textureFluidId.getPath() + "_flow");
+
+        // If they're not already present, add the sprites to the block atlas
+        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).register((atlasTexture, registry) -> {
+            registry.register(stillSpriteId);
+            registry.register(flowingSpriteId);
+        });
+
+        final Identifier fluidId = Registry.FLUID.getId(still);
+        final Identifier listenerId = new Identifier(fluidId.getNamespace(), fluidId.getPath() + "_reload_listener");
+
+        final Sprite[] fluidSprites = { null, null };
+
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+            @Override
+            public Identifier getFabricId() {
+                return listenerId;
+            }
+
+            /**
+             * Get the sprites from the block atlas when resources are reloaded
+             */
+            @Override
+            public void reload(ResourceManager resourceManager) {
+                final Function<Identifier, Sprite> atlas = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
+                fluidSprites[0] = atlas.apply(stillSpriteId);
+                fluidSprites[1] = atlas.apply(flowingSpriteId);
+            }
+        });
+
+        // The FluidRenderer gets the sprites and color from a FluidRenderHandler during rendering
+        final FluidRenderHandler renderHandler = new FluidRenderHandler()
+        {
+            @Override
+            public Sprite[] getFluidSprites(BlockRenderView view, BlockPos pos, FluidState state) {
+                return fluidSprites;
+            }
+
+            @Override
+            public int getFluidColor(BlockRenderView view, BlockPos pos, FluidState state) {
+                return color;
+            }
+        };
+
+        FluidRenderHandlerRegistry.INSTANCE.register(still, renderHandler);
+        FluidRenderHandlerRegistry.INSTANCE.register(flowing, renderHandler);
     }
 }

@@ -1,4 +1,4 @@
-package alphamode.core.nebula.client.mixin;
+package alphamode.core.nebula.mixin.client;
 
 import com.mojang.serialization.Lifecycle;
 import org.spongepowered.asm.mixin.Mixin;

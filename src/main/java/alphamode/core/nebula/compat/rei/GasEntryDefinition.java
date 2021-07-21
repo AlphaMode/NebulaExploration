@@ -1,11 +1,10 @@
-package alphamode.core.nebula.rei;
+package alphamode.core.nebula.compat.rei;
 
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alphamode.core.nebula.NebulaRegistry;
 import alphamode.core.nebula.gases.Gas;
 import alphamode.core.nebula.gases.GasVolume;
 import com.google.common.collect.Lists;
-import dev.architectury.fluid.FluidStack;
 import dev.architectury.hooks.fluid.FluidStackHooks;
 import dev.architectury.hooks.fluid.fabric.FluidStackHooksImpl;
 import dev.architectury.utils.Env;
@@ -38,8 +37,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.PlayerScreenHandler;
@@ -50,7 +47,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
 
 public class GasEntryDefinition implements EntryDefinition<GasVolume>, EntrySerializer<GasVolume> {
 

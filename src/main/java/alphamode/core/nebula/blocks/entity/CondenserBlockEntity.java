@@ -30,19 +30,20 @@ import net.minecraft.world.World;
 public class CondenserBlockEntity extends LockableContainerBlockEntity implements Machine<GasVolume>, FluidExtractable {
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(1, ItemStack.EMPTY);
     public List<CondenserScreenHandler> handlers = new ArrayList<>();
-    private List<GasVolume> gases = new ArrayList<>();
+    private List<GasVolume> tank = new ArrayList<>();
 
     public CondenserBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(NebulaBlocks.CONDENSER_BLOCK_ENTITY, blockPos, blockState);
     }
 
     @Override
-    public void readNbt(NbtCompound compoundTag) {
-        super.readNbt(compoundTag);
-        Inventories.readNbt(compoundTag, this.items);
-        NbtList gasesTag = compoundTag.getList("gases", 10);
-        this.gases = new ArrayList<>();
+    public void readNbt(NbtCompound nbtTag) {
+        super.readNbt(nbtTag);
+        Inventories.readNbt(nbtTag, this.items);
+        NbtList gasesTag = nbtTag.getList("tank", 10);
+        this.tank = new ArrayList<>();
         for (int i = 0; i < gasesTag.size(); ++i) {
+            this.tank.add(GasVolume.fromTag(gasesTag.getCompound(i)));
             //this.gases.add(FluidVolume.fromTag(compoundTag));
         }
     }
@@ -52,17 +53,22 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
         super.writeNbt(compoundTag);
         Inventories.writeNbt(compoundTag, this.items);
         NbtList gasesTag = new NbtList();
-        for (GasVolume gas : gases) {
+        for (GasVolume gas : tank) {
             NbtCompound gasTag = new NbtCompound();
-            gas.toTag(compoundTag);
+            gas.toTag(gasTag);
             gasesTag.add(gasTag);
         }
-        compoundTag.put("gases", gasesTag);
+        compoundTag.put("tank", gasesTag);
         return compoundTag;
     }
 
+    @Deprecated
     public List<GasVolume> getGases() {
-        return gases;
+        return tank;
+    }
+
+    public List<GasVolume> getTank() {
+        return this.tank;
     }
 
     @Override
@@ -72,9 +78,7 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     public ScreenHandler createMenu(int syncID, PlayerInventory inventory, PlayerEntity player) {
-        gases.clear();
-        gases.add(new GasVolume(NebulaGases.NITROGEN, 600));
-        gases.add(new GasVolume(NebulaGases.OXYGEN, 12));
+        tank.clear();
         CondenserScreenHandler handler = new CondenserScreenHandler(syncID, inventory, this);
         handlers.add(handler);
         return handler;
@@ -82,8 +86,8 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     protected ScreenHandler createScreenHandler(int syncID, PlayerInventory inventory) {
-        //gases.add(FluidKeys.get(NebulaGases.NITROGEN).withAmount(100));
-        gases.add(new GasVolume(NebulaGases.NITROGEN, 40));
+        //tank.add(FluidKeys.get(NebulaGases.NITROGEN).withAmount(100));
+        tank.add(new GasVolume(NebulaGases.NITROGEN, 40));
         CondenserScreenHandler handler = new CondenserScreenHandler(syncID, inventory, this);
         handlers.add(handler);
         return handler;
@@ -134,11 +138,6 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
     @Override
     public void clear() {
         items.clear();
-    }
-
-
-    public static void tick(World world, BlockPos pos, BlockState state, CondenserBlockEntity blockEntity) {
-
     }
 
     public static <T extends BlockEntity> void tick(World world, BlockPos blockPos, BlockState blockState, T blockEntity) {

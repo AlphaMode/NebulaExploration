@@ -1,11 +1,9 @@
 package alphamode.core.nebula.blocks.entity;
 
-import alphamode.core.nebula.NebulaMod;
 import alphamode.core.nebula.api.*;
 import alphamode.core.nebula.blocks.NebulaBlocks;
 import alphamode.core.nebula.gases.GasVolume;
 import java.awt.*;
-import java.util.Iterator;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

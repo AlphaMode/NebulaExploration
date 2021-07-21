@@ -69,6 +69,8 @@ public class MustardBomb extends ThrownItemEntity {
 
     }
 
+
+
     @Override
     protected Item getDefaultItem() {
         return NebulaItems.MUSTARD_BOMB;

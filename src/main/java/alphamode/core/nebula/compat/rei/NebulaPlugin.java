@@ -1,4 +1,4 @@
-package alphamode.core.nebula.rei;
+package alphamode.core.nebula.compat.rei;
 
 import alphamode.core.nebula.NebulaRegistry;
 import alphamode.core.nebula.gases.Gas;

@@ -9,7 +9,7 @@ import net.minecraft.util.registry.Registry;
 import static alphamode.core.nebula.NebulaMod.id;
 
 public class NebulaItems {
-    private static final Item.Settings generalItem = new Item.Settings().maxCount(1).group(NebulaMod.SPACE_TAB);
+    public static final Item.Settings generalItem = new Item.Settings().maxCount(1).group(NebulaMod.SPACE_TAB);
 
     public static final OxygenTankItem BASIC_OXYGEN_TANK;
     public static final Item MUSTARD_BOMB;

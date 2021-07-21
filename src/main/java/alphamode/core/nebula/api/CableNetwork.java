@@ -1,5 +1,6 @@
 package alphamode.core.nebula.api;
 
+import alphamode.core.nebula.gases.GasVolume;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.Set;
  * Class for managing a network of cables
  */
 public class CableNetwork {
+
+    private int transferRate = 10;
 
     private Set<Node> nodes = new HashSet<>();
 
@@ -42,6 +45,15 @@ public class CableNetwork {
             }
         }
         nodes.remove(node);
+    }
+
+    public List<GasVolume> attemptTransfer(List<GasVolume> gasVolumes) {
+        for(GasVolume gas : gasVolumes) {
+            //gas.getAmount() / gasVolumes.size();
+        }
+
+
+        return null;
     }
 
 }

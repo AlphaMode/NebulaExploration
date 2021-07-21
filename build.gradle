@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.8-SNAPSHOT'
+    id 'fabric-loom' version '0.9-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -26,6 +26,18 @@ repositories {
         name = 'Ladysnake Mods'
         url = 'https://ladysnake.jfrog.io/artifactory/mods'
     }
+    maven {
+        url = "https://maven.terraformersmc.com/releases/"
+    }
+    maven {
+        url = "https://hephaestus.dev/release"
+    }
+    maven {
+        url "https://oskarstrom.net/maven"
+        content {
+            includeGroup "net.oskarstrom"
+        }
+    }
 }
 
 dependencies {
@@ -39,6 +51,15 @@ dependencies {
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:6.0.245-alpha"
     modRuntime "me.shedaniel:RoughlyEnoughItems-fabric:6.0.245-alpha"
     modApi "alexiil.mc.lib:libblockattributes-fluids:0.9.0-pre.1"
+    modApi "com.terraformersmc:modmenu:2.0.2"
+    modApi("me.shedaniel.cloth:cloth-config-fabric:5.0.34") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    modImplementation "dev.monarkhes:myron:1.6.0"
+    include "dev.monarkhes:myron:1.6.0"
+    modImplementation ('net.oskarstrom:DashLoader:2.1-dev4') {
+        exclude group: 'net.fabricmc.fabric-api'
+    }
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
 }
