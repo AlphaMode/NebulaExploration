@@ -9,4 +9,5 @@ accessible method   net/minecraft/util/registry/Registry    create  (Lnet/minecr
 
 accessible method   net/minecraft/block/FluidBlock  <init>  (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V
 
-accessible class   net/minecraft/block/entity/BlockEntityType$BlockEntityFactory
+accessible class    net/minecraft/block/entity/BlockEntityType$BlockEntityFactory
+accessible field    net/minecraft/client/gui/screen/ingame/HandledScreen backgroundWidth I

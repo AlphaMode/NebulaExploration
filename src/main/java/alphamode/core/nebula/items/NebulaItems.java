@@ -1,7 +1,10 @@
 package alphamode.core.nebula.items;
 
 import alphamode.core.nebula.NebulaMod;
+import alphamode.core.nebula.api.NebulaID;
 import alphamode.core.nebula.blocks.NebulaBlocks;
+
+import net.minecraft.item.ArmorMaterials;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.registry.Registry;
@@ -14,6 +17,7 @@ public class NebulaItems {
     public static final OxygenTankItem BASIC_OXYGEN_TANK;
     public static final Item MUSTARD_BOMB;
     public static final Item FAN;
+    public static final GasHelmet GAS_HELMET;
 
     //BLOCK ITEMS
     public static final BlockItem CONDENSER;
@@ -28,6 +32,7 @@ public class NebulaItems {
         BASIC_OXYGEN_TANK = Registry.register(Registry.ITEM, id("basic_oxygen_tank"), new OxygenTankItem(generalItem,100));
         FAN = Registry.register(Registry.ITEM,id("fan"), new Item(generalItem.maxCount(64)));
         MUSTARD_BOMB = Registry.register(Registry.ITEM,id("mustard_bomb"),new MustardGasBomb(generalItem.maxCount(16)));
+        GAS_HELMET = Registry.register(Registry.ITEM, new NebulaID("gas_helmet"), new GasHelmet(ArmorMaterials.NETHERITE, generalItem.maxCount(1)));
 
         CONDENSER = Registry.register(Registry.ITEM, id("condenser"), new BlockItem(NebulaBlocks.CONDENSER_BLOCK, new Item.Settings().group(NebulaMod.SPACE_MACHINES)));
         BASIC_GAS_CABLE = Registry.register(Registry.ITEM, id("basic_gas_cable"), new BlockItem(NebulaBlocks.BASIC_GAS_CABLE, new Item.Settings().group(NebulaMod.SPACE_MACHINES)));

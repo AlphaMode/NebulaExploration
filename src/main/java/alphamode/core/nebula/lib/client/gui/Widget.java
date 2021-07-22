@@ -3,9 +3,10 @@ package alphamode.core.nebula.lib.client.gui;
 import java.util.List;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 
-public abstract class Widget {
+public abstract class Widget extends DrawableHelper {
 
     protected List<Widget> nestedWidgets;
     protected int startX, startY;
@@ -17,6 +18,12 @@ public abstract class Widget {
     }
 
     public void render(MatrixStack matrixStack) {
+        for (Widget nested : nestedWidgets) {
+            nested.render(matrixStack);
+        }
+    }
+
+    public void render(MatrixStack matrixStack, int x, int y, float delta) {
         for (Widget nested : nestedWidgets) {
             nested.render(matrixStack);
         }

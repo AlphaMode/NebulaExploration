@@ -8,7 +8,9 @@
     "EntityMixin"
   ],
   "client": [
-    "client.LevelPropertiesMixin"
+    "client.LevelPropertiesMixin",
+    "client.InventoryScreenMixin",
+    "client.HandledScreenAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
