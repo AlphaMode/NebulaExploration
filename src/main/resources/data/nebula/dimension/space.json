@@ -1,0 +1,11 @@
+{
+  "type": "nebula:space",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": {
+      "biome": "nebula:space",
+      "structures": {
+      }
+    }
+  }
+}

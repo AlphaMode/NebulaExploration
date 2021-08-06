@@ -5,6 +5,7 @@ import alphamode.core.nebula.NebulaRegistry;
 import alphamode.core.nebula.gases.Gas;
 import alphamode.core.nebula.gases.GasVolume;
 import com.google.common.collect.Lists;
+import dev.architectury.fluid.FluidStack;
 import dev.architectury.hooks.fluid.FluidStackHooks;
 import dev.architectury.hooks.fluid.fabric.FluidStackHooksImpl;
 import dev.architectury.utils.Env;
@@ -19,10 +20,12 @@ import me.shedaniel.rei.api.client.util.SpriteRenderer;
 import me.shedaniel.rei.api.common.entry.EntrySerializer;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.comparison.ComparisonContext;
+import me.shedaniel.rei.api.common.entry.comparison.FluidComparatorRegistry;
 import me.shedaniel.rei.api.common.entry.type.EntryDefinition;
 import me.shedaniel.rei.api.common.entry.type.EntryType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
@@ -97,12 +100,16 @@ public class GasEntryDefinition implements EntryDefinition<GasVolume>, EntrySeri
 
     @Override
     public long hash(EntryStack<GasVolume> entry, GasVolume value, ComparisonContext context) {
-        return 0;
+        int code = 1;
+        code = 31 * code + value.getGas().hashCode();
+        code = 31 * code + value.hashCode();
+        //code = 31 * code + Long.hashCode(FluidComparatorRegistry.getInstance().hashOf(context, FluidStack.create(value.getGas().getAsFluid(), value.getAmount())));
+        return code;
     }
 
     @Override
     public boolean equals(GasVolume o1, GasVolume o2, ComparisonContext context) {
-        return false;
+        return o1.equals(o2);
     }
 
 
@@ -174,19 +181,13 @@ public class GasEntryDefinition implements EntryDefinition<GasVolume>, EntrySeri
         }
 
         @Override
-        public void afterBase(EntryStack<GasVolume> entry, Sprite extraData, MatrixStack matrices, float delta) {
-
-        }
+        public void afterBase(EntryStack<GasVolume> entry, Sprite extraData, MatrixStack matrices, float delta) { }
 
         @Override
-        public void renderOverlay(EntryStack<GasVolume> entry, Sprite extraData, MatrixStack matrices, VertexConsumerProvider.Immediate immediate, Rectangle bounds, int mouseX, int mouseY, float delta) {
-
-        }
+        public void renderOverlay(EntryStack<GasVolume> entry, Sprite extraData, MatrixStack matrices, VertexConsumerProvider.Immediate immediate, Rectangle bounds, int mouseX, int mouseY, float delta) { }
 
         @Override
-        public void endBatch(EntryStack<GasVolume> entry, Sprite extraData, MatrixStack matrices, float delta) {
-
-        }
+        public void endBatch(EntryStack<GasVolume> entry, Sprite extraData, MatrixStack matrices, float delta) { }
 
         @Override
         public void render(EntryStack<GasVolume> entry, MatrixStack matrices, Rectangle bounds, int mouseX, int mouseY, float delta) {

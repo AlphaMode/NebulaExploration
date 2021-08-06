@@ -1,14 +1,7 @@
-package alphamode.core.nebula.mixin;
+package alphamode.core.nebula.items;
 
-import alphamode.core.nebula.NebulaMod;
 import alphamode.core.nebula.fluids.UpsideDownFluid;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -26,20 +19,18 @@ import net.minecraft.tag.FluidTags;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
 
-@Mixin(BucketItem.class)
-public abstract class BucketItemMixin {
-    @Shadow protected abstract void playEmptyingSound(@Nullable PlayerEntity player, WorldAccess world, BlockPos pos);
+public class NebulaBucket extends BucketItem {
+    protected final Fluid fluid;
+    public NebulaBucket(Fluid fluid, Settings settings) {
+        super(fluid, settings);
+        this.fluid = fluid;
+    }
 
-    @Shadow @Final private Fluid fluid;
-
-    @Shadow public abstract boolean placeFluid(@Nullable PlayerEntity player, World world, BlockPos pos, @Nullable BlockHitResult hitResult);
-
-    @Inject(method = "placeFluid", at = @At("HEAD"), cancellable = true)
-    public void UpsideDownFluidPlace(PlayerEntity player, World world, BlockPos pos, BlockHitResult hitResult, CallbackInfoReturnable<Boolean> cir) {
+    @Override
+    public boolean placeFluid(@Nullable PlayerEntity player, World world, BlockPos pos, @Nullable BlockHitResult hitResult) {
         if (!(this.fluid instanceof FlowableFluid || this.fluid instanceof UpsideDownFluid)) {
-            cir.setReturnValue(false);
+            return false;
         } else {
             BlockState blockState = world.getBlockState(pos);
             Block block = blockState.getBlock();
@@ -47,7 +38,7 @@ public abstract class BucketItemMixin {
             boolean bl = blockState.canBucketPlace(this.fluid);
             boolean bl2 = blockState.isAir() || bl || block instanceof FluidFillable && ((FluidFillable)block).canFillWithFluid(world, pos, blockState, this.fluid);
             if (!bl2) {
-                cir.setReturnValue(hitResult != null && this.placeFluid(player, world, hitResult.getBlockPos().offset(hitResult.getSide()), null));
+                return hitResult != null && this.placeFluid(player, world, hitResult.getBlockPos().offset(hitResult.getSide()), (BlockHitResult)null);
             } else if (world.getDimension().isUltrawarm() && this.fluid.isIn(FluidTags.WATER)) {
                 int i = pos.getX();
                 int j = pos.getY();
@@ -58,21 +49,21 @@ public abstract class BucketItemMixin {
                     world.addParticle(ParticleTypes.LARGE_SMOKE, (double)i + Math.random(), (double)j + Math.random(), (double)k + Math.random(), 0.0D, 0.0D, 0.0D);
                 }
 
-                cir.setReturnValue(true);
+                return true;
             } else if (block instanceof FluidFillable && this.fluid == Fluids.WATER) {
                 ((FluidFillable)block).tryFillWithFluid(world, pos, blockState, ((FlowableFluid)this.fluid).getStill(false));
                 this.playEmptyingSound(player, world, pos);
-                cir.setReturnValue(true);
+                return true;
             } else {
                 if (!world.isClient && bl && !material.isLiquid()) {
                     world.breakBlock(pos, true);
                 }
 
-                if (!world.setBlockState(pos, this.fluid.getDefaultState().getBlockState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD) && !blockState.getFluidState().isStill()) {
-                    cir.setReturnValue(false);
+                if (!world.setBlockState(pos, this.fluid.getDefaultState().getBlockState(), 11) && !blockState.getFluidState().isStill()) {
+                    return false;
                 } else {
                     this.playEmptyingSound(player, world, pos);
-                    cir.setReturnValue(true);
+                    return true;
                 }
             }
         }

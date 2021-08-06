@@ -1,6 +1,5 @@
 package alphamode.core.nebula.fluids;
 
-import alphamode.core.nebula.NebulaMod;
 import alphamode.core.nebula.NebulaProperties;
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
@@ -13,7 +12,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import net.minecraft.block.*;
-import net.minecraft.client.render.block.FluidRenderer;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -25,7 +23,6 @@ import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;

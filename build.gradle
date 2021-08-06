@@ -38,6 +38,10 @@ repositories {
             includeGroup "net.oskarstrom"
         }
     }
+    maven {
+        url = uri("https://storage.googleapis.com/devan-maven/")
+    }
+    mavenLocal()
 }
 
 dependencies {
@@ -57,9 +61,10 @@ dependencies {
     }
     modImplementation "dev.monarkhes:myron:1.6.0"
     include "dev.monarkhes:myron:1.6.0"
-    modImplementation ('net.oskarstrom:DashLoader:2.1-dev4') {
+    modImplementation("net.devtech:arrp:0.+")
+    /*modImplementation ('net.oskarstrom:DashLoader:2.1-dev4') {
         exclude group: 'net.fabricmc.fabric-api'
-    }
+    }*/
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
 }

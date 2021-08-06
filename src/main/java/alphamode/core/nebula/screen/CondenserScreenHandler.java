@@ -1,8 +1,5 @@
 package alphamode.core.nebula.screen;
 
-import alphamode.core.nebula.blocks.entity.CondenserBlockEntity;
-import alphamode.core.nebula.packet.GasTankS2CPacket;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -16,20 +13,20 @@ public class CondenserScreenHandler extends ScreenHandler {
     private ServerPlayerEntity playerEntity;
     private Inventory inventory;
 
-    public CondenserScreenHandler(int syncId,PlayerInventory inventory) {
-        this(syncId,inventory,new SimpleInventory(1));
+    public CondenserScreenHandler(int syncId, PlayerInventory inventory) {
+        this(syncId, inventory, new SimpleInventory(1));
     }
 
     public CondenserScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
-        super(NebulaScreens.CONDENSER_MENU,syncId);
+        super(NebulaScreens.CONDENSER_MENU, syncId);
         checkSize(inventory, 1);
         this.inventory = inventory;
-        if(playerInventory.player instanceof ServerPlayerEntity)
-            this.playerEntity = (ServerPlayerEntity) playerInventory.player;
+        if (playerInventory.player instanceof ServerPlayerEntity serverPlayerEntity)
+            this.playerEntity = serverPlayerEntity;
         inventory.onOpen(playerInventory.player);
         int m;
         int l;
-        this.addSlot(new Slot(inventory,0 ,66,52));
+        this.addSlot(new Slot(inventory, 0, 66, 52));
         //The player inventory
         for (m = 0; m < 3; ++m) {
             for (l = 0; l < 9; ++l) {
@@ -40,17 +37,6 @@ public class CondenserScreenHandler extends ScreenHandler {
         for (m = 0; m < 9; ++m) {
             this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
         }
-    }
-
-    public void tick() {
-        playerEntity.networkHandler.sendPacket(GasTankS2CPacket.create(((CondenserBlockEntity)inventory).getTank()));
-    }
-
-    @Override
-    public void close(PlayerEntity player) {
-        super.close(player);
-        if(playerEntity instanceof ServerPlayerEntity)
-            ((CondenserBlockEntity)inventory).handlers.remove(this);
     }
 
     public Inventory getInventory() {
@@ -81,8 +67,6 @@ public class CondenserScreenHandler extends ScreenHandler {
 
         return newStack;
     }
-
-
 
     @Override
     public boolean canUse(PlayerEntity player) {

@@ -1,6 +1,8 @@
 package alphamode.core.nebula.blocks;
 
 import alphamode.core.nebula.blocks.entity.CondenserBlockEntity;
+import alphamode.core.nebula.packet.GasTankS2CPacket;
+import alphamode.core.nebula.util.Util;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,6 +15,7 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;

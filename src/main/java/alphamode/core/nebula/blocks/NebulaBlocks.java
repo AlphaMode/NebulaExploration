@@ -1,5 +1,6 @@
 package alphamode.core.nebula.blocks;
 
+import alphamode.core.nebula.api.NebulaID;
 import alphamode.core.nebula.blocks.entity.CondenserBlockEntity;
 import alphamode.core.nebula.blocks.entity.GasCableBlockEntity;
 import alphamode.core.nebula.blocks.entity.WirelessTransferNode;
@@ -25,6 +26,7 @@ public class NebulaBlocks {
     public static final BasicGasCable BASIC_GAS_CABLE;
     public static final OreBlock ALUMINUM_ORE;
     public static final Block WIRELESS_FLUID_TRANSFER_NODE;
+    public static final GasCompressor COMPRESSOR;
 
     //BLOCK ENTITIES
     public static final BlockEntityType<CondenserBlockEntity> CONDENSER_BLOCK_ENTITY;
@@ -42,6 +44,7 @@ public class NebulaBlocks {
         ALUMINUM_ORE = Registry.register(Registry.BLOCK, id("aluminum_ore"), new OreBlock(generalProperties.strength(4.5f, 5.f).sounds(BlockSoundGroup.STONE).breakByTool(FabricToolTags.PICKAXES, 2)));
         WIRELESS_FLUID_TRANSFER_NODE = Registry.register(Registry.BLOCK, id("wireless_fluid_transfer_node"), new WirelessFluidNode(generalProperties));
         TRANSFER_NODE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("transfer_node"), BlockEntityType.Builder.create(WirelessTransferNode::new, WIRELESS_FLUID_TRANSFER_NODE).build(null));
+        COMPRESSOR = Registry.register(Registry.BLOCK, new NebulaID("basic_gas_compressor"), new GasCompressor(generalProperties, 0));
     }
 
 

@@ -3,6 +3,7 @@ package alphamode.core.nebula.client.gui.screens;
 import alphamode.core.nebula.gases.GasVolume;
 import alphamode.core.nebula.gases.NebulaGases;
 import alphamode.core.nebula.lib.client.gui.GasTankWidget;
+import alphamode.core.nebula.packet.GasTankS2CPacket;
 import alphamode.core.nebula.screen.CondenserScreenHandler;
 import alphamode.core.nebula.util.Util;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler> {
@@ -36,8 +38,8 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         // Center the title
         titleX = 7;//(imageWidth - font.width(title)) / 2;
         titleY = 5;
-
-        atmosphericGases = Util.getAtmosphereGas(client.player);
+        //TODO: Move this to the server
+        atmosphericGases = new ArrayList<>();
         tankGases = List.of(new GasVolume(NebulaGases.NITROGEN, 40), new GasVolume(NebulaGases.OXYGEN, 12));
 
         atmosphereTank = new GasTankWidget(this, 11, 15, atmosphericGases, -1);
@@ -62,9 +64,13 @@ public class CondenserHandledScreen extends HandledScreen<CondenserScreenHandler
         drawTexture(matrixStack, this.x, this.y, 0, 0, backgroundWidth, backgroundHeight);
     }
 
-    public void updateTank(List<GasVolume> gases) {
-        tankGases = gases;
-        itemTank.setGases(gases);
+    public void updateTank(List<GasVolume> gases, GasTankS2CPacket.Type type) {
+        if(type == GasTankS2CPacket.Type.INFO) {
+            atmosphericGases = gases;
+            atmosphereTank.setGases(gases);
+        } else {
+            tankGases = gases;
+            itemTank.setGases(gases);
+        }
     }
-
 }

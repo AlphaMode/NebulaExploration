@@ -1,39 +1,59 @@
 package alphamode.core.nebula.blocks.entity;
 
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
+import alphamode.core.nebula.NebulaMod;
 import alphamode.core.nebula.api.Machine;
 import alphamode.core.nebula.blocks.NebulaBlocks;
+import alphamode.core.nebula.gases.Gas;
 import alphamode.core.nebula.gases.GasVolume;
 import alphamode.core.nebula.gases.NebulaGases;
+import alphamode.core.nebula.packet.GasTankS2CPacket;
 import alphamode.core.nebula.screen.CondenserScreenHandler;
+import alphamode.core.nebula.util.Util;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import org.apache.logging.log4j.LogManager;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidDrainable;
+import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.network.ServerQueryNetworkHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.collection.SortedArraySet;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class CondenserBlockEntity extends LockableContainerBlockEntity implements Machine<GasVolume>, FluidExtractable {
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(1, ItemStack.EMPTY);
-    public List<CondenserScreenHandler> handlers = new ArrayList<>();
+    private boolean collecting = true;
+    private List<GasVolume> atmosphericGases;
     private List<GasVolume> tank = new ArrayList<>();
+    private int cooldown = 10;
 
     public CondenserBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(NebulaBlocks.CONDENSER_BLOCK_ENTITY, blockPos, blockState);
+        NebulaMod.LOGGER.info(world);
     }
 
     @Override
@@ -80,16 +100,12 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
     public ScreenHandler createMenu(int syncID, PlayerInventory inventory, PlayerEntity player) {
         tank.clear();
         CondenserScreenHandler handler = new CondenserScreenHandler(syncID, inventory, this);
-        handlers.add(handler);
         return handler;
     }
 
     @Override
     protected ScreenHandler createScreenHandler(int syncID, PlayerInventory inventory) {
-        //tank.add(FluidKeys.get(NebulaGases.NITROGEN).withAmount(100));
-        tank.add(new GasVolume(NebulaGases.NITROGEN, 40));
         CondenserScreenHandler handler = new CondenserScreenHandler(syncID, inventory, this);
-        handlers.add(handler);
         return handler;
     }
 
@@ -140,9 +156,27 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
         items.clear();
     }
 
-    public static <T extends BlockEntity> void tick(World world, BlockPos blockPos, BlockState blockState, T blockEntity) {
-        for (CondenserScreenHandler handle : ((CondenserBlockEntity) blockEntity).handlers) {
-            handle.tick();
+    public static <T extends BlockEntity> void tick(World world, BlockPos blockPos, BlockState blockState, T BE) {
+        CondenserBlockEntity blockEntity = (CondenserBlockEntity) BE;
+        if(blockEntity.tank.size() == 0)
+            Util.getAtmosphereGas(blockEntity.world).forEach((gasVolume -> blockEntity.tank.add(new GasVolume(gasVolume.getGas(), 0))));
+        if (world instanceof ServerWorld serverWorld) {
+            blockEntity.cooldown--;
+            for (ServerPlayerEntity player : serverWorld.getPlayers()) {
+                if (player.currentScreenHandler instanceof CondenserScreenHandler screenHandler) {
+                    serverWorld.sendToPlayerIfNearby(player, false, blockPos.getX(), blockPos.getY(), blockPos.getZ(), GasTankS2CPacket.create(screenHandler.syncId, Util.getAtmosphereGas(serverWorld), GasTankS2CPacket.Type.INFO));
+                    serverWorld.sendToPlayerIfNearby(player, false, blockPos.getX(), blockPos.getY(), blockPos.getZ(), GasTankS2CPacket.create(screenHandler.syncId, ((CondenserBlockEntity) BE).getTank(), GasTankS2CPacket.Type.TANK));
+                }
+            }
+            if (blockEntity.collecting & blockEntity.cooldown == 0) {
+                blockEntity.cooldown = 10;
+                GasVolume current = Util.getAtmosphereGas(serverWorld).get(0);
+                for (GasVolume gasVolume : blockEntity.tank) {
+                    if (gasVolume.getGas() == current.getGas()) {
+                        gasVolume.setAmount(gasVolume.getAmount() + current.getAmount());
+                    }
+                }
+            }
         }
     }
 

@@ -8,11 +8,13 @@ import alphamode.core.nebula.NebulaRegistry;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import alphamode.core.nebula.util.Util;
 import net.fabricmc.api.EnvType;
@@ -60,6 +62,16 @@ public final class GasVolume {
         return tag;
     }
 
+    public static GasVolume fromPacket(PacketByteBuf buf) {
+        return new GasVolume(NebulaRegistry.GAS.get(buf.readIdentifier()), buf.readLong());
+    }
+
+    public PacketByteBuf toPacket(PacketByteBuf buf) {
+        buf.writeIdentifier(NebulaRegistry.GAS.getId(owner));
+        buf.writeLong(gasAmount);
+        return buf;
+    }
+
     public FluidVolume toFluidVolume() {
         return key.withAmount(FluidAmount.of(gasAmount, 1000));
     }
@@ -83,4 +95,10 @@ public final class GasVolume {
         return tooltip;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(NebulaRegistry.GAS.getId(this.getGas()).equals(NebulaRegistry.GAS.getId(((GasVolume)obj).getGas())) & ((GasVolume)obj).gasAmount == gasAmount)
+            return true;
+        return false;
+    }
 }

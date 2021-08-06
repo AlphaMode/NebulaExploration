@@ -164,6 +164,6 @@ public class UpsideDownFluidBlock extends Block implements FluidDrainable {
     static {
         LEVEL = Properties.LEVEL_15;
         COLLISION_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
-        field_34006 = ImmutableList.of(Direction.DOWN, Direction.SOUTH, Direction.NORTH, Direction.EAST, Direction.WEST);
+        field_34006 = ImmutableList.of(Direction.UP, Direction.SOUTH, Direction.NORTH, Direction.EAST, Direction.WEST);
     }
 }

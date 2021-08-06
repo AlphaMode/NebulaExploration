@@ -3,6 +3,7 @@ package alphamode.core.nebula.blocks;
 import alphamode.core.nebula.api.Machine;
 import alphamode.core.nebula.api.Node;
 import alphamode.core.nebula.blocks.entity.GasCableBlockEntity;
+import alphamode.core.nebula.util.Util;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -56,23 +57,13 @@ public class BasicGasCable extends BlockWithEntity {
         return checkType(type, NebulaBlocks.GAS_CABLE_BLOCK_ENTITY_BLOCK, GasCableBlockEntity::tick);
     }
 
-    public BooleanProperty getFacing(Direction dir) {
-        return switch (dir) {
-            case UP -> Properties.UP;
-            case DOWN -> Properties.DOWN;
-            case NORTH -> Properties.NORTH;
-            case SOUTH -> Properties.SOUTH;
-            case EAST -> Properties.EAST;
-            case WEST -> Properties.WEST;
-        };
-    }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockState state = getDefaultState();
         for (Direction dir : Direction.values()) {
             if (ctx.getWorld().getBlockEntity(ctx.getBlockPos().offset(dir)) instanceof Machine || ctx.getWorld().getBlockEntity(ctx.getBlockPos().offset(dir)) instanceof Node) {
-                state = state.with(getFacing(dir), true);
+                state = state.with(Util.getFacing(dir), true);
             }
         }
         return state;
@@ -91,10 +82,10 @@ public class BasicGasCable extends BlockWithEntity {
             }
         }
         if(world.getBlockEntity(neighborPos) == null) {
-            return state.with(getFacing(direction), false);
+            return state.with(Util.getFacing(direction), false);
         }
         if (world.getBlockEntity(neighborPos) instanceof Machine || world.getBlockEntity(neighborPos) instanceof Node)
-            return state.with(getFacing(direction), true);
+            return state.with(Util.getFacing(direction), true);
         return state;
     }
 

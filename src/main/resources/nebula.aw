@@ -11,3 +11,5 @@ accessible method   net/minecraft/block/FluidBlock  <init>  (Lnet/minecraft/flui
 
 accessible class    net/minecraft/block/entity/BlockEntityType$BlockEntityFactory
 accessible field    net/minecraft/client/gui/screen/ingame/HandledScreen backgroundWidth I
+
+accessible method   net/minecraft/server/world/ServerWorld sendToPlayerIfNearby    (Lnet/minecraft/server/network/ServerPlayerEntity;ZDDDLnet/minecraft/network/Packet;)Z

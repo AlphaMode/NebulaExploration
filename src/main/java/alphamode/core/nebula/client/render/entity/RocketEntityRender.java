@@ -1,6 +1,7 @@
-package alphamode.core.nebula.entitys.rocket;
+package alphamode.core.nebula.client.render.entity;
 
 import alphamode.core.nebula.api.NebulaID;
+import alphamode.core.nebula.entitys.rocket.RocketBase;
 import dev.monarkhes.myron.api.Myron;
 import java.util.Random;
 
@@ -13,8 +14,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 
-public class RocketEntityRenderer extends EntityRenderer<RocketBase> {
-    public RocketEntityRenderer(EntityRendererFactory.Context ctx) {
+public class RocketEntityRender extends EntityRenderer<RocketBase> {
+    protected RocketEntityRender(EntityRendererFactory.Context ctx) {
         super(ctx);
     }
 

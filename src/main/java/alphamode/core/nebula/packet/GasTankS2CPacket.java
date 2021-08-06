@@ -6,6 +6,7 @@ import alphamode.core.nebula.gases.GasVolume;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import static alphamode.core.nebula.NebulaMod.LOGGER;
 import static alphamode.core.nebula.NebulaMod.id;
 
 import java.util.ArrayList;
@@ -17,39 +18,44 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 public class GasTankS2CPacket {
-    public static final Identifier ID = id("condenser_packet");
+    public static final Identifier ID = id("gas_tank");
 
     public static void onPacket(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
-        NbtCompound data = buf.readNbt();
         List<GasVolume> gases = new ArrayList<>();
-        NbtList gasesList = data.getList("gases", 10);
-        for(int i = 0; i<gasesList.size();i++) {
-            gases.add(GasVolume.fromTag(gasesList.getCompound(i)));
+        int id = buf.readInt();
+        int temp = buf.readInt();
+        for (int i = 0; i < temp; i++) {
+            gases.add(GasVolume.fromPacket(buf));
         }
-
-        gases.sort( (a,b) -> b.getAmount() - a.getAmount() );
-
+        gases.sort((a, b) -> b.getAmount() - a.getAmount());
+        Type type = buf.readEnumConstant(Type.class);
         client.execute(() -> {
-            if(client.currentScreen instanceof CondenserHandledScreen) {
-                CondenserHandledScreen screen = (CondenserHandledScreen) client.currentScreen;
-                screen.updateTank(gases);
+            LOGGER.info(client.player.currentScreenHandler.syncId + " " + id);
+            if (client.player.currentScreenHandler.syncId == id) {
+                LOGGER.info(client.player.currentScreenHandler);
+                ((CondenserHandledScreen)client.currentScreen).updateTank(gases, type);
             }
         });
     }
 
-    public static Packet<?> create(List<GasVolume> gases) {
+    public static Packet<?> create(int id, List<GasVolume> gases, Type type) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        NbtList gasesList = new NbtList();
-        for(GasVolume gas : gases) {
-            gasesList.add(gas.toTag(new NbtCompound()));
+        buf.writeInt(id);
+        buf.writeInt(gases.size());
+        for (GasVolume gas : gases) {
+            gas.toPacket(buf);
         }
-        NbtCompound data = new NbtCompound();
-        data.put("gases", gasesList);
-        buf.writeNbt(data);
-        return ServerPlayNetworking.createS2CPacket(ID,buf);
+        buf.writeEnumConstant(type);
+        return ServerPlayNetworking.createS2CPacket(ID, buf);
     }
 
+    public enum Type {
+        INFO,
+        TANK
+    }
 }

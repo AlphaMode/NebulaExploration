@@ -4,7 +4,6 @@
   "package": "alphamode.core.nebula.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "BucketItemMixin",
     "EntityMixin"
   ],
   "client": [
