@@ -165,7 +165,6 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
             for (ServerPlayerEntity player : serverWorld.getPlayers()) {
                 if (player.currentScreenHandler instanceof CondenserScreenHandler screenHandler) {
                     serverWorld.sendToPlayerIfNearby(player, false, blockPos.getX(), blockPos.getY(), blockPos.getZ(), GasTankS2CPacket.create(screenHandler.syncId, Util.getAtmosphereGas(serverWorld), GasTankS2CPacket.Type.INFO));
-                    serverWorld.sendToPlayerIfNearby(player, false, blockPos.getX(), blockPos.getY(), blockPos.getZ(), GasTankS2CPacket.create(screenHandler.syncId, ((CondenserBlockEntity) BE).getTank(), GasTankS2CPacket.Type.TANK));
                 }
             }
             if (blockEntity.collecting & blockEntity.cooldown == 0) {
@@ -173,6 +172,9 @@ public class CondenserBlockEntity extends LockableContainerBlockEntity implement
                 GasVolume current = Util.getAtmosphereGas(serverWorld).get(0);
                 for (GasVolume gasVolume : blockEntity.tank) {
                     if (gasVolume.getGas() == current.getGas()) {
+                        for (ServerPlayerEntity player : serverWorld.getPlayers())
+                            if (player.currentScreenHandler instanceof CondenserScreenHandler screenHandler)
+                                serverWorld.sendToPlayerIfNearby(player, false, blockPos.getX(), blockPos.getY(), blockPos.getZ(), GasTankS2CPacket.create(screenHandler.syncId, ((CondenserBlockEntity) BE).getTank(), GasTankS2CPacket.Type.TANK));
                         gasVolume.setAmount(gasVolume.getAmount() + current.getAmount());
                     }
                 }

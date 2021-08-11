@@ -41,6 +41,7 @@ import java.util.function.Function;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.texture.Sprite;
@@ -48,6 +49,7 @@ import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -91,6 +93,7 @@ public class NebulaModClient implements ClientModInitializer {
         ModelLoadingRegistry.INSTANCE.registerModelProvider((provider, out) -> {
             out.accept(new NebulaID("models/misc/utah_teapot.obj"));
         });
+        NebulaRegistry.GAS.
         BlockEntityRendererRegistry.INSTANCE.register(NebulaBlocks.CONDENSER_BLOCK_ENTITY, ctx -> new BlockEntityRenderObj());
         NebulaNetwork.registerEntityPacket(new NebulaID("laser"), LaserEntity::spawn);
     }

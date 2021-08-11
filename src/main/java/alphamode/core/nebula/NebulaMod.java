@@ -49,9 +49,7 @@ public class NebulaMod implements ModInitializer {
     public static ItemGroup SPACE_MACHINES = Util.createTab(new NebulaID("space_machines"), () -> new ItemStack(NebulaItems.CONDENSER));
     public static ItemGroup TANKS = Util.createTab(new NebulaID("tanks"), () -> new ItemStack(NebulaItems.GAS_TANK), (stacks) -> {
         for (Gas gas : NebulaRegistry.GAS) {
-
             ItemStack stack = new ItemStack(NebulaItems.GAS_TANK);
-            LOGGER.info(gas.getName().toString());
             stack.getOrCreateNbt().putString("gas_id", NebulaRegistry.GAS.getId(gas).toString());
             if(gas != NebulaGases.EMPTY)
                 stack.getNbt().putInt("gas", 1000);

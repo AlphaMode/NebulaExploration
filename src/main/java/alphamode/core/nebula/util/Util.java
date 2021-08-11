@@ -1,26 +1,20 @@
 package alphamode.core.nebula.util;
 
-import alphamode.core.nebula.NebulaMod;
 import alphamode.core.nebula.NebulaRegistry;
 import alphamode.core.nebula.dimensions.NebulaPlanets;
 import alphamode.core.nebula.gases.Gas;
 import alphamode.core.nebula.gases.GasVolume;
-import alphamode.core.nebula.items.NebulaItems;
 import alphamode.core.nebula.transfer.Side;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.logging.LogManager;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.BooleanProperty;
@@ -30,9 +24,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 public class Util {

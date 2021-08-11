@@ -19,6 +19,8 @@ import net.minecraft.util.registry.Registry;
 import alphamode.core.nebula.util.Util;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
