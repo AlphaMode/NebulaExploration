@@ -1,21 +1,18 @@
 package alphamode.core.nebula.gases;
 
 import alphamode.core.nebula.NebulaRegistry;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-
-import net.minecraft.fluid.Fluid;
-import net.minecraft.util.Identifier;
+import alphamode.core.nebula.fluids.NebulaFluid;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.text.Text;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
-public class Gas {
+public class Gas extends NebulaFluid {
 
     @Nullable
     private Identifier id;
@@ -32,8 +29,14 @@ public class Gas {
     }
 
     public Gas() {
+        super();
         color = 0xFFFFFFFF;
         //gasTexture = FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER).getFluidSprites(null, BlockPos.ORIGIN, Fluids.WATER.getDefaultState())[0];
+    }
+
+    @Override
+    public boolean isStill(FluidState state) {
+        return false;
     }
 
     public Fluid getAsFluid() {
@@ -64,4 +67,8 @@ public class Gas {
         return new TranslatableText(getTranslationKey());
     }
 
+    @Override
+    public int getLevel(FluidState state) {
+        return 0;
+    }
 }

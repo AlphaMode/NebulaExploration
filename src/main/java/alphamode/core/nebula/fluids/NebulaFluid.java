@@ -12,21 +12,17 @@ import net.minecraft.util.registry.Registry;
 
 public abstract class NebulaFluid extends AbstractNebulaFluid {
 
-    protected Identifier fluidId;
-
-    public NebulaFluid(Identifier id, boolean infinite) {
-        this.fluidId = id;
+    public NebulaFluid(boolean infinite) {
         this.isInfinite = infinite;
     }
 
-    public NebulaFluid(Identifier id) {
-        this.fluidId = id;
+    public NebulaFluid() {
         this.isInfinite = false;
     }
 
     @Override
     public BlockState toBlockState(FluidState state) {
-        return Registry.BLOCK.get(fluidId).getDefaultState().with(Properties.LEVEL_15, getBlockStateLevel(state));
+        return state.getBlockState().getBlock().getDefaultState().with(Properties.LEVEL_15, getBlockStateLevel(state));
     }
 
     @Override
@@ -35,8 +31,8 @@ public abstract class NebulaFluid extends AbstractNebulaFluid {
     }
 
     public static class Still extends NebulaFluid {
-        public Still(Identifier id,boolean infinite) {
-            super(id ,infinite);
+        public Still(boolean infinite) {
+            super(infinite);
         }
 
         @Override
@@ -50,10 +46,6 @@ public abstract class NebulaFluid extends AbstractNebulaFluid {
         }
     }
     public static class Flowing extends NebulaFluid {
-        public Flowing(Identifier id) {
-            super(id);
-        }
-
         @Override
         protected void appendProperties(StateManager.Builder<Fluid, FluidState> builder) {
             super.appendProperties(builder);

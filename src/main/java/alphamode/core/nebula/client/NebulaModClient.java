@@ -93,7 +93,7 @@ public class NebulaModClient implements ClientModInitializer {
         ModelLoadingRegistry.INSTANCE.registerModelProvider((provider, out) -> {
             out.accept(new NebulaID("models/misc/utah_teapot.obj"));
         });
-        NebulaRegistry.GAS.
+        //NebulaRegistry.GAS.
         BlockEntityRendererRegistry.INSTANCE.register(NebulaBlocks.CONDENSER_BLOCK_ENTITY, ctx -> new BlockEntityRenderObj());
         NebulaNetwork.registerEntityPacket(new NebulaID("laser"), LaserEntity::spawn);
     }

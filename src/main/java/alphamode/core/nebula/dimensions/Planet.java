@@ -83,5 +83,7 @@ public record Planet (
 
     }
 
+    public static void fromJson() {
 
+    }
 }

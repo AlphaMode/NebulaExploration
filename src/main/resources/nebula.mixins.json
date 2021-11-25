@@ -4,13 +4,15 @@
   "package": "alphamode.core.nebula.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "EntityMixin"
+    "EntityMixin",
+    "MusicManagerMixin"
   ],
   "client": [
     "client.LevelPropertiesMixin",
     "client.InventoryScreenMixin",
     "client.HandledScreenAccessor"
   ],
+  "plugin": "alphamode.core.nebula.mixin.plugin.NebulaMixinPlugin",
   "injectors": {
     "defaultRequire": 1
   }

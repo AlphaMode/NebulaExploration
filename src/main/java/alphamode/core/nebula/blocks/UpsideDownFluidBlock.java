@@ -117,10 +117,8 @@ public class UpsideDownFluidBlock extends Block implements FluidDrainable {
     private boolean receiveNeighborFluids(World world, BlockPos pos, BlockState state) {
         if (this.fluid.isIn(FluidTags.LAVA)) {
             boolean bl = world.getBlockState(pos.down()).isOf(Blocks.SOUL_SOIL);
-            UnmodifiableIterator var5 = field_34006.iterator();
 
-            while (var5.hasNext()) {
-                Direction direction = (Direction) var5.next();
+            for (Direction direction : field_34006) {
                 BlockPos blockPos = pos.offset(direction.getOpposite());
                 if (world.getFluidState(blockPos).isIn(FluidTags.WATER)) {
                     Block block = world.getFluidState(pos).isStill() ? Blocks.OBSIDIAN : Blocks.COBBLESTONE;
